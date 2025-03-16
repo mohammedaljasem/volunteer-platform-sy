@@ -1,19 +1,21 @@
 <?php
 
 use App\Http\Controllers\AdController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\ParticipationRequestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -30,16 +32,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/ads/{ad}', [AdController::class, 'destroy'])->middleware('can:delete-campaign')->name('ads.destroy');
     
     // مسارات التبرع للحملات
-    Route::get('/ads/{ad}/donate', [AdController::class, 'showDonateForm'])->middleware('can:donate-to-campaign')->name('ads.donate');
-    Route::post('/ads/{ad}/donate', [AdController::class, 'donate'])->middleware('can:donate-to-campaign')->name('ads.donate.store');
+    Route::get('/ads/{ad}/donate', [AdController::class, 'showDonateForm'])->name('ads.donate');
+    Route::post('/ads/{ad}/donate', [AdController::class, 'donate'])->name('ads.donate.store');
     
     // مسارات التعليق على الحملات
-    Route::post('/ads/{ad}/comment', [AdController::class, 'comment'])->middleware('can:comment-on-campaign')->name('ads.comment');
+    Route::post('/ads/{ad}/comment', [AdController::class, 'comment'])->name('ads.comment');
 
     // مسارات فرص التطوع
     Route::resource('job-offers', JobOfferController::class);
     Route::post('/job-offers/{jobOffer}/request', [JobOfferController::class, 'requestParticipation'])
-        ->middleware('can:request-participation')
         ->name('job-offers.request');
         
     // مسارات طلبات المشاركة
@@ -61,6 +62,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/organizations/{organization}/remove-member', [OrganizationController::class, 'removeMember'])->name('organizations.remove-member');
     Route::put('/organizations/{organization}/update-member-role', [OrganizationController::class, 'updateMemberRole'])->name('organizations.update-member-role');
     Route::post('/organizations/{organization}/verify', [OrganizationController::class, 'verifyOrganization'])->name('organizations.verify');
+
+    // Ruta para el mapa
+    Route::get('/map', [MapController::class, 'index'])->name('map');
+    Route::get('/api/locations', [MapController::class, 'getLocations'])->name('api.locations');
 });
 
 require __DIR__.'/auth.php';

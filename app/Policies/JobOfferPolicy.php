@@ -76,9 +76,7 @@ class JobOfferPolicy
      */
     public function request(User $user, JobOffer $jobOffer): bool
     {
-        // Only users with 'request-participation' permission can request to participate
-        // And job offer must be active
-        return $user->hasPermissionTo('request-participation') && 
-               $jobOffer->status === 'متاحة';
+        // السماح لجميع المستخدمين بتقديم طلب المشاركة طالما الفرصة متاحة
+        return $jobOffer->status === 'متاحة';
     }
 }

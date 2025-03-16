@@ -54,5 +54,26 @@ class DatabaseSeeder extends Seeder
 
         // Assign the 'منظمة' role to the test organization
         $org->assignRole('منظمة');
+
+        // إضافة المدن السورية
+        $cities = [
+            'دمشق',
+            'حلب',
+            'حمص',
+            'حماة',
+            'اللاذقية',
+            'طرطوس',
+            'دير الزور',
+            'الرقة',
+            'الحسكة',
+            'درعا',
+            'السويداء',
+            'القنيطرة',
+            'إدلب',
+        ];
+        
+        foreach ($cities as $cityName) {
+            \App\Models\City::create(['name' => $cityName]);
+        }
     }
 }

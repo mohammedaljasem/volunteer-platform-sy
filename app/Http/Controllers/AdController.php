@@ -6,9 +6,11 @@ use App\Models\Ad;
 use App\Models\Comment;
 use App\Models\Company;
 use App\Models\Donation;
+use App\Models\UserPoint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\DonationThanksNotification;
 
 class AdController extends Controller
 {
@@ -52,10 +54,13 @@ class AdController extends Controller
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'company_id' => 'required|exists:companies,id',
+            'category' => 'nullable|string|max:100',
             'goal_amount' => 'required|numeric|min:0',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'location_id' => 'nullable|numeric',
+            'city_id' => 'nullable|exists:cities,id',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
         
         if ($request->hasFile('image')) {
@@ -106,12 +111,15 @@ class AdController extends Controller
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'company_id' => 'required|exists:companies,id',
+            'category' => 'nullable|string|max:100',
             'goal_amount' => 'required|numeric|min:0',
             'current_amount' => 'required|numeric|min:0',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:نشطة,مكتملة',
-            'location_id' => 'nullable|numeric',
+            'city_id' => 'nullable|exists:cities,id',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
         
         if ($request->hasFile('image')) {
@@ -188,6 +196,21 @@ class AdController extends Controller
         }
         
         $ad->save();
+        
+        // منح نقاط للمستخدم (10 نقاط لكل 100 وحدة من المبلغ)
+        $user = auth()->user();
+        $pointsToAward = max(10, floor($validatedData['amount'] / 100) * 10);
+        
+        // منح النقاط لجميع المستخدمين
+        UserPoint::create([
+            'user_id' => $user->id,
+            'points' => $pointsToAward,
+            'earned_date' => now(),
+            'source' => 'donation_' . $donation->id,
+        ]);
+        
+        // إرسال إشعار شكر للمستخدم
+        $user->notify(new DonationThanksNotification($donation));
         
         return redirect()->route('ads.show', $ad)
             ->with('success', 'تم تسجيل تبرعك بنجاح! شكراً لمساهمتك في هذه الحملة.');

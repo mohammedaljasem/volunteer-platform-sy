@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Ad extends Model
 {
@@ -22,11 +23,14 @@ class Ad extends Model
         'image',
         'status',
         'company_id',
+        'category',
         'goal_amount',
         'current_amount',
         'start_date',
         'end_date',
-        'location_id',
+        'city_id',
+        'latitude',
+        'longitude',
     ];
 
     /**
@@ -66,6 +70,24 @@ class Ad extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * علاقة الحملة التطوعية بالموقع
+     * Ad has one Location relationship
+     */
+    public function location(): HasOne
+    {
+        return $this->hasOne(Location::class, 'ad_id');
+    }
+
+    /**
+     * علاقة الحملة التطوعية بالمدينة
+     * Ad belongs to City relationship
+     */
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
     }
 
     /**

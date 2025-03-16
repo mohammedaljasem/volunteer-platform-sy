@@ -11,7 +11,7 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('لوحة التحكم') }}
                     </x-nav-link>
@@ -23,6 +23,9 @@
                     </x-nav-link>
                     <x-nav-link :href="route('organizations.index')" :active="request()->routeIs('organizations.*')">
                         {{ __('المنظمات') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('map')" :active="request()->routeIs('map')">
+                        {{ __('الخريطة') }}
                     </x-nav-link>
                     @can('manage-volunteers')
                     <x-nav-link :href="route('participation-requests.index')" :active="request()->routeIs('participation-requests.*')">
@@ -95,6 +98,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('organizations.index')" :active="request()->routeIs('organizations.*')">
                 {{ __('المنظمات') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('map')" :active="request()->routeIs('map')">
+                {{ __('الخريطة') }}
             </x-responsive-nav-link>
             @can('manage-volunteers')
             <x-responsive-nav-link :href="route('participation-requests.index')" :active="request()->routeIs('participation-requests.*')">

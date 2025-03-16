@@ -73,11 +73,13 @@
                             <h3 class="text-lg font-semibold mb-2">المعلومات الزمنية</h3>
                             <p class="mb-1">
                                 <span class="font-semibold">آخر موعد للتقديم:</span> 
-                                {{ $jobOffer->deadline->format('Y-m-d') }}
+                                {{ $jobOffer->deadline ? $jobOffer->deadline->format('Y-m-d') : 'غير محدد' }}
                             </p>
                             <p class="mb-1">
                                 <span class="font-semibold">الوقت المتبقي:</span> 
-                                @if($jobOffer->deadline->isPast())
+                                @if(!$jobOffer->deadline)
+                                    <span class="text-gray-600">غير محدد</span>
+                                @elseif($jobOffer->deadline->isPast())
                                     <span class="text-red-600">انتهى وقت التقديم</span>
                                 @else
                                     {{ $jobOffer->deadline->diffForHumans() }}
@@ -86,7 +88,7 @@
                         </div>
                     </div>
                     
-                    @if($jobOffer->status == 'متاحة' && !$hasRequested && $jobOffer->deadline->isFuture())
+                    @if($jobOffer->status == 'متاحة' && !$hasRequested && ($jobOffer->deadline && $jobOffer->deadline->isFuture()))
                         @can('request', $jobOffer)
                             <div class="mt-8 border-t pt-6">
                                 <form action="{{ route('job-offers.request', $jobOffer) }}" method="POST">
@@ -103,7 +105,7 @@
                                 <p class="font-medium">{{ __('لقد قمت بالفعل بتقديم طلب مشاركة في هذه الفرصة') }}</p>
                             </div>
                         </div>
-                    @elseif($jobOffer->deadline->isPast())
+                    @elseif($jobOffer->deadline && $jobOffer->deadline->isPast())
                         <div class="mt-8 border-t pt-6">
                             <div class="bg-red-50 text-red-700 p-4 rounded-lg">
                                 <p class="font-medium">{{ __('انتهى وقت التقديم لهذه الفرصة') }}</p>

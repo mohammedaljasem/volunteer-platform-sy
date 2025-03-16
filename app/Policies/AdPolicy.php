@@ -92,8 +92,8 @@ class AdPolicy
      */
     public function donate(User $user, Ad $ad): bool
     {
-        // Only users with 'donate-to-campaign' permission can donate to campaigns
-        return $user->hasPermissionTo('donate-to-campaign');
+        // جميع المستخدمين المسجلين يمكنهم التبرع للحملات
+        return true;
     }
 
     /**
@@ -101,7 +101,7 @@ class AdPolicy
      */
     public function comment(User $user, Ad $ad): bool
     {
-        // Only users with 'comment-on-campaign' permission can comment on campaigns
-        return $user->hasPermissionTo('comment-on-campaign');
+        // جميع المستخدمين المسجلين يمكنهم التعليق على الحملات
+        return true;
     }
 }

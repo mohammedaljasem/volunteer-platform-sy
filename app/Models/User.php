@@ -88,4 +88,43 @@ class User extends Authenticatable
             ->withPivot('role')
             ->withTimestamps();
     }
+
+    /**
+     * علاقة المستخدم بالشارات
+     * User belongs to many Badges relationship
+     */
+    public function badges(): BelongsToMany
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')
+            ->withPivot('date')
+            ->withTimestamps();
+    }
+
+    /**
+     * علاقة المستخدم بالنقاط
+     * User has many UserPoints relationship
+     */
+    public function points(): HasMany
+    {
+        return $this->hasMany(UserPoint::class);
+    }
+
+    /**
+     * علاقة المستخدم بالإشعارات
+     * User has many Notifications relationship
+     */
+    public function customNotifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * حساب إجمالي نقاط المستخدم
+     *
+     * @return int
+     */
+    public function getTotalPointsAttribute(): int
+    {
+        return $this->points()->sum('points');
+    }
 }

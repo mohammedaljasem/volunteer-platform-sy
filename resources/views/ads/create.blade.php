@@ -32,6 +32,22 @@
                                 <x-input-error :messages="$errors->get('company_id')" class="mt-2" />
                             </div>
                             
+                            <!-- التصنيف -->
+                            <div>
+                                <x-input-label for="category" :value="__('تصنيف الحملة')" />
+                                <select id="category" name="category" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                    <option value="">اختر تصنيف الحملة</option>
+                                    <option value="صحة" {{ old('category') == 'صحة' ? 'selected' : '' }}>صحة</option>
+                                    <option value="تعليم" {{ old('category') == 'تعليم' ? 'selected' : '' }}>تعليم</option>
+                                    <option value="بيئة" {{ old('category') == 'بيئة' ? 'selected' : '' }}>بيئة</option>
+                                    <option value="إغاثة" {{ old('category') == 'إغاثة' ? 'selected' : '' }}>إغاثة</option>
+                                    <option value="أيتام" {{ old('category') == 'أيتام' ? 'selected' : '' }}>أيتام</option>
+                                    <option value="مشاريع خيرية" {{ old('category') == 'مشاريع خيرية' ? 'selected' : '' }}>مشاريع خيرية</option>
+                                    <option value="أخرى" {{ old('category') == 'أخرى' ? 'selected' : '' }}>أخرى</option>
+                                </select>
+                                <x-input-error :messages="$errors->get('category')" class="mt-2" />
+                            </div>
+                            
                             <!-- المبلغ المستهدف -->
                             <div>
                                 <x-input-label for="goal_amount" :value="__('المبلغ المستهدف (بالليرة السورية)')" />
@@ -58,6 +74,35 @@
                                 <x-input-label for="end_date" :value="__('تاريخ الانتهاء')" />
                                 <x-text-input id="end_date" class="block mt-1 w-full" type="date" name="end_date" :value="old('end_date')" required />
                                 <x-input-error :messages="$errors->get('end_date')" class="mt-2" />
+                            </div>
+                            
+                            <!-- المدينة - الموقع -->
+                            <div>
+                                <x-input-label for="city_id" :value="__('المدينة')" />
+                                <select id="city_id" name="city_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                    <option value="">اختر المدينة</option>
+                                    @foreach(\App\Models\City::all() as $city)
+                                        <option value="{{ $city->id }}" {{ old('city_id') == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('city_id')" class="mt-2" />
+                            </div>
+                            
+                            <!-- إحداثيات الموقع -->
+                            <div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <x-input-label for="latitude" :value="__('خط العرض')" />
+                                        <x-text-input id="latitude" class="block mt-1 w-full" type="text" name="latitude" :value="old('latitude')" placeholder="33.5138" />
+                                    </div>
+                                    <div>
+                                        <x-input-label for="longitude" :value="__('خط الطول')" />
+                                        <x-text-input id="longitude" class="block mt-1 w-full" type="text" name="longitude" :value="old('longitude')" placeholder="36.2765" />
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">أدخل إحداثيات الموقع (اختياري). يمكن الحصول عليها من خرائط جوجل.</p>
+                                <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
                             </div>
                         </div>
                         

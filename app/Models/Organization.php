@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Organization extends Model
 {
@@ -52,5 +53,14 @@ class Organization extends Model
         return $this->belongsToMany(User::class, 'organization_user')
                     ->withPivot('role')
                     ->withTimestamps();
+    }
+
+    /**
+     * علاقة المنظمة بالموقع
+     * Organization has one Location relationship
+     */
+    public function location(): HasOne
+    {
+        return $this->hasOne(Location::class);
     }
 }
