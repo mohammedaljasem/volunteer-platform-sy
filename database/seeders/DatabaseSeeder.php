@@ -14,7 +14,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Run the roles and permissions seeder first
-        $this->call(RolesAndPermissionsSeeder::class);
+        $this->call([
+            RolesAndPermissionsSeeder::class,
+            OrganizationSeeder::class,
+            CompanySeeder::class,
+            AdSeeder::class,
+            JobOfferSeeder::class,
+        ]);
 
         // Create a test user
         $user = User::factory()->create([
@@ -48,9 +54,5 @@ class DatabaseSeeder extends Seeder
 
         // Assign the 'منظمة' role to the test organization
         $org->assignRole('منظمة');
-
-        // Seed companies and ads
-        $this->call(CompanySeeder::class);
-        $this->call(AdSeeder::class);
     }
 }

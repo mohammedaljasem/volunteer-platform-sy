@@ -29,6 +29,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'view-reports',
             'donate-to-campaign',
             'comment-on-campaign',
+            'create-job-offer',
+            'request-participation',
         ];
 
         foreach ($permissions as $permission) {
@@ -46,6 +48,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'join-campaign',
             'donate-to-campaign',
             'comment-on-campaign',
+            'request-participation',
         ]);
 
         // Volunteer team role
@@ -69,6 +72,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'join-campaign',
             'manage-volunteers',
             'view-reports',
+            'create-job-offer',
         ]);
     }
 }

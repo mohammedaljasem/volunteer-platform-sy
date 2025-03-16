@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdController;
+use App\Http\Controllers\JobOfferController;
+use App\Http\Controllers\ParticipationRequestController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OrganizationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,6 +35,32 @@ Route::middleware('auth')->group(function () {
     
     // مسارات التعليق على الحملات
     Route::post('/ads/{ad}/comment', [AdController::class, 'comment'])->middleware('can:comment-on-campaign')->name('ads.comment');
+
+    // مسارات فرص التطوع
+    Route::resource('job-offers', JobOfferController::class);
+    Route::post('/job-offers/{jobOffer}/request', [JobOfferController::class, 'requestParticipation'])
+        ->middleware('can:request-participation')
+        ->name('job-offers.request');
+        
+    // مسارات طلبات المشاركة
+    Route::get('/participation-requests', [ParticipationRequestController::class, 'index'])
+        ->middleware('can:viewAny,App\Models\ParticipationRequest')
+        ->name('participation-requests.index');
+    Route::get('/participation-requests/{participationRequest}', [ParticipationRequestController::class, 'show'])
+        ->name('participation-requests.show');
+    Route::post('/participation-requests/{participationRequest}/status', [ParticipationRequestController::class, 'updateStatus'])
+        ->name('participation-requests.update-status');
+    Route::get('/my-participation-requests', [ParticipationRequestController::class, 'myRequests'])
+        ->name('participation-requests.my');
+
+    // مسارات المنظمات
+    Route::resource('organizations', OrganizationController::class);
+    Route::post('/organizations/{organization}/join', [OrganizationController::class, 'join'])->name('organizations.join');
+    Route::delete('/organizations/{organization}/leave', [OrganizationController::class, 'leave'])->name('organizations.leave');
+    Route::post('/organizations/{organization}/add-member', [OrganizationController::class, 'addMember'])->name('organizations.add-member');
+    Route::delete('/organizations/{organization}/remove-member', [OrganizationController::class, 'removeMember'])->name('organizations.remove-member');
+    Route::put('/organizations/{organization}/update-member-role', [OrganizationController::class, 'updateMemberRole'])->name('organizations.update-member-role');
+    Route::post('/organizations/{organization}/verify', [OrganizationController::class, 'verifyOrganization'])->name('organizations.verify');
 });
 
 require __DIR__.'/auth.php';

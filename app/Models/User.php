@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -66,5 +67,25 @@ class User extends Authenticatable
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * علاقة المستخدم بطلبات المشاركة
+     * User has many ParticipationRequests relationship
+     */
+    public function participationRequests(): HasMany
+    {
+        return $this->hasMany(ParticipationRequest::class);
+    }
+
+    /**
+     * علاقة المستخدم بالمنظمات
+     * User belongs to many Organizations relationship
+     */
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class, 'organization_user')
+            ->withPivot('role')
+            ->withTimestamps();
     }
 }
