@@ -48,5 +48,9 @@ class DatabaseSeeder extends Seeder
 
         // Assign the 'منظمة' role to the test organization
         $org->assignRole('منظمة');
+
+        // Seed companies and ads
+        $this->call(CompanySeeder::class);
+        $this->call(AdSeeder::class);
     }
 }

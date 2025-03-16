@@ -27,22 +27,29 @@ class RolesAndPermissionsSeeder extends Seeder
             'join-campaign',
             'manage-volunteers',
             'view-reports',
+            'donate-to-campaign',
+            'comment-on-campaign',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            // Verificar si el permiso ya existe
+            if (!Permission::where('name', $permission)->exists()) {
+                Permission::create(['name' => $permission]);
+            }
         }
 
         // Create roles and assign permissions
         // User role
-        $userRole = Role::create(['name' => 'مستخدم']);
+        $userRole = Role::firstOrCreate(['name' => 'مستخدم']);
         $userRole->givePermissionTo([
             'view-campaigns',
             'join-campaign',
+            'donate-to-campaign',
+            'comment-on-campaign',
         ]);
 
         // Volunteer team role
-        $teamRole = Role::create(['name' => 'فرقة تطوعية']);
+        $teamRole = Role::firstOrCreate(['name' => 'فرقة تطوعية']);
         $teamRole->givePermissionTo([
             'create-campaign',
             'edit-campaign',
@@ -53,7 +60,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Organization role
-        $orgRole = Role::create(['name' => 'منظمة']);
+        $orgRole = Role::firstOrCreate(['name' => 'منظمة']);
         $orgRole->givePermissionTo([
             'create-campaign',
             'edit-campaign',
