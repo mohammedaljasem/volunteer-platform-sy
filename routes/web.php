@@ -13,6 +13,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// مسارات متاحة للجميع
+Route::get('/map', [MapController::class, 'index'])->name('map');
+Route::get('/api/locations', [MapController::class, 'getLocations'])->name('api.locations');
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
@@ -64,8 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/organizations/{organization}/verify', [OrganizationController::class, 'verifyOrganization'])->name('organizations.verify');
 
     // Ruta para el mapa
-    Route::get('/map', [MapController::class, 'index'])->name('map');
-    Route::get('/api/locations', [MapController::class, 'getLocations'])->name('api.locations');
+    // Route::get('/map', [MapController::class, 'index'])->name('map');
+    // Route::get('/api/locations', [MapController::class, 'getLocations'])->name('api.locations');
 });
 
 require __DIR__.'/auth.php';

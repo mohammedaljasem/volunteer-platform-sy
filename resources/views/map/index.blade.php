@@ -62,20 +62,37 @@
         document.addEventListener('DOMContentLoaded', function() {
             // إنشاء خريطة مع تركيز على سوريا
             const map = L.map('map').setView([35.0, 38.0], 7);
+            console.log('تم إنشاء الخريطة');
 
             // إضافة طبقة الخريطة
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
+            console.log('تم إضافة طبقة الخريطة');
 
             // إنشاء مجموعات للعلامات
             const markers = L.markerClusterGroup();
             
             // الحصول على البيانات من API
+            console.log('جاري الاتصال بـ API على العنوان:', '/api/locations');
             fetch('/api/locations')
-                .then(response => response.json())
+                .then(response => {
+                    console.log('تم استلام الرد:', response.status);
+                    if (!response.ok) {
+                        throw new Error('فشل الاتصال بواجهة برمجة التطبيقات: ' + response.status);
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    data.forEach(location => {
+                    console.log('تم استلام البيانات:', data);
+                    console.log('عدد المواقع:', data.length);
+                    
+                    if (data.length === 0) {
+                        document.getElementById('map').innerHTML += '<div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert"><p>لا توجد مواقع لعرضها على الخريطة</p></div>';
+                    }
+                    
+                    data.forEach((location, index) => {
+                        console.log(`معالجة الموقع ${index}:`, location);
                         let marker;
                         let popupContent = '';
                         
@@ -90,18 +107,13 @@
                             });
                             
                             marker = L.marker([location.lat, location.lng], { icon: adIcon });
+                            console.log(`تم إضافة علامة إعلان في الموقع: [${location.lat}, ${location.lng}]`);
                             
                             // محتوى النافذة المنبثقة للحملات التطوعية
                             popupContent = `
                                 <div>
                                     <h3 class="font-bold text-lg">${location.title}</h3>
                                     <p>${location.description}</p>
-                                    <div class="mt-2">
-                                        <div class="bg-gray-200 rounded-full h-2.5 mb-1">
-                                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: ${(location.current_amount / location.goal_amount) * 100}%"></div>
-                                        </div>
-                                        <p class="text-sm">${location.current_amount} / ${location.goal_amount}</p>
-                                    </div>
                                     <a href="/ads/${location.id}" class="mt-2 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">عرض التفاصيل</a>
                                 </div>
                             `;
@@ -115,15 +127,12 @@
                             });
                             
                             marker = L.marker([location.lat, location.lng], { icon: orgIcon });
+                            console.log(`تم إضافة علامة منظمة في الموقع: [${location.lat}, ${location.lng}]`);
                             
                             // محتوى النافذة المنبثقة للمنظمات
-                            const verifiedBadge = location.verified 
-                                ? '<span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">موثق</span>' 
-                                : '';
-                                
                             popupContent = `
                                 <div>
-                                    <h3 class="font-bold text-lg">${location.name} ${verifiedBadge}</h3>
+                                    <h3 class="font-bold text-lg">${location.title}</h3>
                                     <p>${location.description}</p>
                                     <a href="/organizations/${location.id}" class="mt-2 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">عرض التفاصيل</a>
                                 </div>
@@ -135,9 +144,16 @@
                     });
                     
                     map.addLayer(markers);
+                    console.log('تم إضافة كل العلامات إلى الخريطة');
                 })
                 .catch(error => {
                     console.error('Error fetching locations:', error);
+                    document.getElementById('map').innerHTML += `
+                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+                            <p class="font-bold">خطأ</p>
+                            <p>${error.message}</p>
+                        </div>
+                    `;
                 });
         });
     </script>
