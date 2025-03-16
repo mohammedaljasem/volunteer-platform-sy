@@ -13,11 +13,40 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Run the roles and permissions seeder first
+        $this->call(RolesAndPermissionsSeeder::class);
 
-        User::factory()->create([
+        // Create a test user
+        $user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'phone' => '0987654321',
+            'notification_preference' => 'email',
         ]);
+
+        // Assign the 'مستخدم' role to the test user
+        $user->assignRole('مستخدم');
+
+        // Create a test volunteer team
+        $team = User::factory()->create([
+            'name' => 'Test Team',
+            'email' => 'team@example.com',
+            'phone' => '0123456789',
+            'notification_preference' => 'email',
+        ]);
+
+        // Assign the 'فرقة تطوعية' role to the test team
+        $team->assignRole('فرقة تطوعية');
+
+        // Create a test organization
+        $org = User::factory()->create([
+            'name' => 'Test Organization',
+            'email' => 'org@example.com',
+            'phone' => '0567891234',
+            'notification_preference' => 'email',
+        ]);
+
+        // Assign the 'منظمة' role to the test organization
+        $org->assignRole('منظمة');
     }
 }
