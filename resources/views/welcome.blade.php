@@ -261,7 +261,7 @@
             <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
         </div>
         <div class="carousel-inner">
-            <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1534028037405-74f376137863?auto=format&fit=crop&q=80')">
+            <div class="carousel-item active" style="background-image: url('{{ asset('images/sliders/Volunteering-platform.jpg') }}')">
                 <div class="carousel-overlay">
                     <div class="carousel-caption">
                         <h1 class="display-4 fw-bold">منصة التطوع الأولى في سوريا</h1>
@@ -274,7 +274,7 @@
                     </div>
                 </div>
             </div>
-            <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&q=80')">
+            <div class="carousel-item" style="background-image: url('{{ asset('images/sliders/bac-g-imge-welcome.jpg') }}')">
                 <div class="carousel-overlay">
                     <div class="carousel-caption">
                         <h1 class="display-4 fw-bold">ساعد في إعادة إعمار سوريا</h1>
@@ -287,7 +287,7 @@
                     </div>
                 </div>
             </div>
-            <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1511949860663-92c5c57d48a7?auto=format&fit=crop&q=80')">
+            <div class="carousel-item" style="background-image: url('{{ asset('images/sliders/an-opportunity.jpg') }}')">
                 <div class="carousel-overlay">
                     <div class="carousel-caption">
                         <h1 class="display-4 fw-bold">فرص تطوع متاحة</h1>
