@@ -284,22 +284,100 @@
                                                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ $comment->created_at->format('Y/m/d H:i') }}</p>
                                                 </div>
                                             </div>
+                                            
+                                            <!-- أزرار التعديل والحذف للتعليق (تظهر فقط لصاحب التعليق) -->
+                                            @auth
+                                                @if(auth()->id() == $comment->user_id)
+                                                    <div class="flex space-x-2 space-x-reverse">
+                                                        <button type="button" 
+                                                                onclick="openEditModal({{ $comment->id }}, '{{ addslashes($comment->text) }}')" 
+                                                                class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                                                title="تعديل التعليق">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828l-3.182 3.182M14.828 3.172a2 2 0 010 2.828l-10 10-4.243 1.415 1.415-4.243 10-10z" />
+                                                            </svg>
+                                                        </button>
+                                                        <button type="button" 
+                                                                onclick="confirmDelete({{ $comment->id }})" 
+                                                                class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                                                title="حذف التعليق">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            @endauth
                                         </div>
                                         <div class="text-gray-700 dark:text-gray-300 mt-2">
                                             {{ $comment->text }}
-                                    </div>
+                                        </div>
                                     </div>
                                 @endforeach
-                                </div>
+                            </div>
                         @else
                             <div class="text-center py-8">
                                 <p class="text-gray-500 dark:text-gray-400">لا توجد تعليقات على هذه الحملة</p>
                                 <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">كن أول من يعلق!</p>
-                                </div>
+                            </div>
                         @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- نافذة تعديل التعليق -->
+    <div id="editCommentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md mx-4">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">تعديل التعليق</h3>
+            <form id="editCommentForm" method="POST" action="">
+                @csrf
+                @method('PUT')
+                <div class="mb-4">
+                    <label for="edit_text" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">التعليق</label>
+                    <textarea id="edit_text" name="text" rows="4" class="form-input w-full" required></textarea>
+                </div>
+                <div class="flex justify-end space-x-2 space-x-reverse">
+                    <button type="button" onclick="closeEditModal()" class="btn-secondary">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        حفظ التعديلات
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نموذج حذف التعليق (مخفي) -->
+    <form id="deleteCommentForm" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <script>
+        // دالة لفتح نافذة تعديل التعليق
+        function openEditModal(commentId, commentText) {
+            document.getElementById('edit_text').value = commentText;
+            document.getElementById('editCommentForm').action = '/comments/' + commentId;
+            document.getElementById('editCommentModal').classList.remove('hidden');
+            document.getElementById('editCommentModal').classList.add('flex');
+        }
+        
+        // دالة لإغلاق نافذة تعديل التعليق
+        function closeEditModal() {
+            document.getElementById('editCommentModal').classList.remove('flex');
+            document.getElementById('editCommentModal').classList.add('hidden');
+        }
+        
+        // دالة لتأكيد حذف التعليق
+        function confirmDelete(commentId) {
+            if (confirm('هل أنت متأكد من رغبتك في حذف هذا التعليق؟')) {
+                var form = document.getElementById('deleteCommentForm');
+                form.action = '/comments/' + commentId;
+                form.submit();
+            }
+        }
+    </script>
 </x-app-layout> 

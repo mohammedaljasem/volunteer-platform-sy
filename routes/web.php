@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
     
     // مسارات التعليق على الحملات
     Route::post('/ads/{ad}/comment', [AdController::class, 'comment'])->name('ads.comment');
+    Route::put('/comments/{comment}', [AdController::class, 'updateComment'])->name('comments.update');
+    Route::delete('/comments/{comment}', [AdController::class, 'deleteComment'])->name('comments.delete');
 
     // مسارات فرص التطوع
     Route::resource('job-offers', JobOfferController::class);

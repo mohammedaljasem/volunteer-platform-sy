@@ -263,4 +263,44 @@ class AdController extends Controller
         return redirect()->route('ads.show', $ad)
             ->with('success', 'تم إضافة تعليقك بنجاح!');
     }
+
+    /**
+     * Update an existing comment.
+     */
+    public function updateComment(Request $request, Comment $comment)
+    {
+        // التأكد من أن المستخدم هو صاحب التعليق
+        if ($comment->user_id !== auth()->id()) {
+            abort(403, 'غير مصرح لك بتعديل هذا التعليق');
+        }
+        
+        $validatedData = $request->validate([
+            'text' => 'required|string|max:500',
+        ]);
+        
+        $comment->update([
+            'text' => $validatedData['text'],
+        ]);
+        
+        return redirect()->route('ads.show', $comment->ad_id)
+            ->with('success', 'تم تعديل التعليق بنجاح!');
+    }
+    
+    /**
+     * Delete a comment.
+     */
+    public function deleteComment(Comment $comment)
+    {
+        // التأكد من أن المستخدم هو صاحب التعليق
+        if ($comment->user_id !== auth()->id()) {
+            abort(403, 'غير مصرح لك بحذف هذا التعليق');
+        }
+        
+        $adId = $comment->ad_id; // حفظ معرف الحملة قبل حذف التعليق
+        
+        $comment->delete();
+        
+        return redirect()->route('ads.show', $adId)
+            ->with('success', 'تم حذف التعليق بنجاح!');
+    }
 }
