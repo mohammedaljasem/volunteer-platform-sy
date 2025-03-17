@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\JobOffer;
+use App\Models\City;
+use App\Models\Organization;
 use Carbon\Carbon;
 
 class JobOfferSeeder extends Seeder
@@ -14,47 +16,71 @@ class JobOfferSeeder extends Seeder
      */
     public function run(): void
     {
-        // Crear ofertas de trabajo
+        // التأكد من وجود منظمة واحدة على الأقل
+        $organization = Organization::first();
+        if (!$organization) {
+            $organization = Organization::create([
+                'name' => 'منظمة سوريا للتطوع',
+                'description' => 'منظمة تسعى لتنسيق جهود التطوع في سوريا',
+                'email' => 'info@syria-volunteer.org',
+                'phone' => '0912345678',
+                'logo' => null,
+                'verified' => true,
+            ]);
+        }
+
+        // التأكد من وجود مدينة واحدة على الأقل
+        $city = City::first();
+        if (!$city) {
+            $city = City::create([
+                'name' => 'دمشق',
+            ]);
+        }
+
+        // إضافة فرص تطوع تجريبية
         $jobOffers = [
             [
-                'title' => 'متطوعين لتوزيع المساعدات في مخيمات النازحين',
-                'description' => 'نبحث عن متطوعين للمساعدة في توزيع المساعدات الإنسانية في مخيمات النازحين في شمال سوريا. يتضمن العمل تنظيم عمليات التوزيع، تسجيل المستفيدين، والمساعدة في نقل المواد الغذائية والإغاثية. الفترة المتوقعة للتطوع هي أسبوعين، مع إمكانية التمديد.',
-                'organization_id' => 1,
+                'title' => 'مساعدة في توزيع المساعدات الغذائية',
+                'description' => 'نبحث عن متطوعين للمساعدة في توزيع المساعدات الغذائية على العائلات المتضررة في دمشق',
+                'requirements' => 'القدرة على العمل لمدة 4 ساعات يومياً لمدة أسبوع، العمل ضمن فريق، الالتزام بالمواعيد',
+                'image' => 'job_offers/default1.jpg',
+                'organization_id' => $organization->id,
                 'status' => 'متاحة',
-                'deadline' => Carbon::now()->addDays(30),
+                'city_id' => $city->id,
+                'deadline' => now()->addDays(10),
+                'start_date' => now()->addDays(15),
             ],
             [
-                'title' => 'متطوعين في مجال التعليم لمدارس المخيمات',
-                'description' => 'تبحث مؤسسة الأمل للعمل الإنساني عن متطوعين في مجال التعليم للعمل في مدارس المخيمات في شمال سوريا. المهام تشمل تدريس المواد الأساسية (لغة عربية، رياضيات، علوم) لطلاب المرحلة الابتدائية، والمساعدة في تنظيم الأنشطة الترفيهية للأطفال. المدة المطلوبة هي 3 أشهر.',
-                'organization_id' => 2,
+                'title' => 'متطوعون للتدريس المجاني للأطفال',
+                'description' => 'فرصة تطوع لتدريس الأطفال المتأخرين دراسياً في المناطق النائية',
+                'requirements' => 'خبرة في التدريس، مهارات في التعامل مع الأطفال، القدرة على السفر للمناطق النائية',
+                'image' => 'job_offers/default2.jpg',
+                'organization_id' => $organization->id,
                 'status' => 'متاحة',
-                'deadline' => Carbon::now()->addDays(45),
+                'city_id' => $city->id,
+                'deadline' => now()->addDays(20),
+                'start_date' => now()->addDays(30),
             ],
             [
-                'title' => 'أطباء متطوعين للعمل في العيادات المتنقلة',
-                'description' => 'تبحث جمعية العطاء الخيرية عن أطباء متطوعين للعمل في العيادات المتنقلة التي تخدم المناطق النائية في سوريا. نحتاج بشكل خاص إلى أطباء في تخصصات الأطفال، الباطنية، والنساء والتوليد. مدة التطوع المطلوبة هي شهر واحد على الأقل.',
-                'organization_id' => 3,
+                'title' => 'متطوعون للمساعدة في ترميم مدرسة',
+                'description' => 'نبحث عن متطوعين للمساعدة في ترميم وإعادة تأهيل مدرسة متضررة في ريف دمشق',
+                'requirements' => 'خبرة في أعمال البناء والترميم، القدرة على العمل في ظروف صعبة، متاح للعمل لمدة أسبوعين',
+                'image' => 'job_offers/default3.jpg',
+                'organization_id' => $organization->id,
                 'status' => 'متاحة',
-                'deadline' => Carbon::now()->addDays(60),
-            ],
-            [
-                'title' => 'متطوعين للمساعدة في إعادة تأهيل المدارس',
-                'description' => 'نبحث عن متطوعين للمساعدة في مشروع إعادة تأهيل المدارس المتضررة. المهام تشمل أعمال الطلاء، الترميم البسيط، تركيب النوافذ والأبواب، وتجهيز الفصول الدراسية. نرحب بالمتطوعين ذوي الخبرة في أعمال البناء والنجارة.',
-                'organization_id' => 1,
-                'status' => 'قادمة',
-                'deadline' => Carbon::now()->addDays(90),
-            ],
-            [
-                'title' => 'متطوعين للعمل في مشروع الصحة النفسية',
-                'description' => 'تبحث مؤسسة الأمل عن متطوعين من ذوي الخبرة في مجال الصحة النفسية والدعم النفسي والاجتماعي. سيعمل المتطوعون ضمن فريق الدعم النفسي لمساعدة الأطفال والعائلات المتضررة من الحرب. مطلوب خبرة سابقة في مجال العلاج النفسي أو الإرشاد.',
-                'organization_id' => 2,
-                'status' => 'مغلقة',
-                'deadline' => Carbon::yesterday(),
+                'city_id' => $city->id,
+                'deadline' => now()->addDays(5),
+                'start_date' => now()->addDays(10),
             ],
         ];
 
-        foreach ($jobOffers as $offer) {
-            JobOffer::create($offer);
+        foreach ($jobOffers as $offerData) {
+            JobOffer::updateOrCreate(
+                ['title' => $offerData['title']],
+                $offerData
+            );
         }
+
+        $this->command->info('تمت إضافة فرص التطوع بنجاح!');
     }
 }

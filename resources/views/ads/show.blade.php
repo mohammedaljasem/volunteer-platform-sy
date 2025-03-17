@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('تفاصيل الحملة') }}
-            </h2>
+        </h2>
             <div class="flex space-x-2 space-x-reverse">
                 @can('update', $ad)
                 <a href="{{ route('ads.edit', $ad) }}" class="btn-secondary">
@@ -29,7 +29,7 @@
                 <!-- عرض رسائل النجاح -->
                 @if(session('success'))
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 mx-6 mt-6" role="alert">
-                        <span class="block sm:inline">{{ session('success') }}</span>
+                            <span class="block sm:inline">{{ session('success') }}</span>
                     </div>
                 @endif
 
@@ -90,7 +90,7 @@
                                 <div class="text-gray-700 dark:text-gray-300 leading-relaxed text-justify">
                                     {!! nl2br(e($ad->description)) !!}
                                 </div>
-                            </div>
+                                    </div>
                             
                             <!-- تفاصيل إضافية -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -152,14 +152,14 @@
                                         <div class="mb-4">
                                             <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">مبلغ التبرع (ل.س)</label>
                                             <input type="number" id="amount" name="amount" min="1000" step="500" class="form-input" placeholder="أدخل مبلغ التبرع" required>
-                                        </div>
+                                </div>
                                         <div class="mb-4">
                                             <label for="payment_method" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">طريقة الدفع</label>
                                             <select id="payment_method" name="payment_method" class="form-input" required>
                                                 <option value="نقدي">نقدي</option>
                                                 <option value="تحويل بنكي">تحويل بنكي</option>
                                             </select>
-                                        </div>
+                            </div>
                                         <button type="submit" class="w-full btn-primary">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -213,11 +213,11 @@
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                                         </svg>
                                                     </div>
-                                                    <div>
+                                <div>
                                                         <p class="font-medium text-gray-800 dark:text-gray-200">{{ $donation->user->name }}</p>
                                                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ $donation->created_at->format('Y/m/d') }}</p>
                                                     </div>
-                                                </div>
+                                </div>
                                                 <span class="text-green-600 dark:text-green-400 font-semibold">{{ number_format($donation->amount) }} ل.س</span>
                                             </li>
                                         @endforeach
@@ -254,7 +254,7 @@
                         @else
                             <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-md mb-6">
                                 <p class="text-blue-800 dark:text-blue-200 text-center">يجب <a href="{{ route('login') }}" class="underline">تسجيل الدخول</a> لإضافة تعليق</p>
-                            </div>
+                        </div>
                         @endauth
                         
                         <!-- قائمة التعليقات -->
@@ -277,15 +277,15 @@
                                         </div>
                                         <div class="text-gray-700 dark:text-gray-300 mt-2">
                                             {{ $comment->text }}
-                                        </div>
+                                    </div>
                                     </div>
                                 @endforeach
-                            </div>
+                                </div>
                         @else
                             <div class="text-center py-8">
                                 <p class="text-gray-500 dark:text-gray-400">لا توجد تعليقات على هذه الحملة</p>
                                 <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">كن أول من يعلق!</p>
-                            </div>
+                                </div>
                         @endif
                     </div>
                 </div>

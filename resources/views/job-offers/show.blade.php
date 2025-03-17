@@ -52,6 +52,12 @@
                         </span>
                     </div>
                     
+                    @if($jobOffer->image)
+                    <div class="mb-6">
+                        <img src="{{ $jobOffer->image_url }}" alt="{{ $jobOffer->title }}" class="w-full h-64 object-cover rounded-lg shadow-sm">
+                    </div>
+                    @endif
+                    
                     <div class="mb-6">
                         <h3 class="text-lg font-semibold mb-2">تفاصيل الفرصة</h3>
                         <p class="text-gray-700 whitespace-pre-line">{{ $jobOffer->description }}</p>

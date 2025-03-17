@@ -46,6 +46,27 @@ class Ad extends Model
     ];
 
     /**
+     * الحصول على رابط الصورة
+     * يعيد صورة افتراضية إذا لم تكن الصورة متوفرة
+     * 
+     * @return string
+     */
+    public function getImageUrlAttribute(): string
+    {
+        if (empty($this->image)) {
+            return 'https://via.placeholder.com/350x200/1a237e/FFFFFF?text=حملة+تطوعية';
+        }
+        
+        // التحقق مما إذا كان المسار يبدأ بـ "ads/" وهو مخزن في Storage
+        if (strpos($this->image, 'ads/') === 0) {
+            return asset('storage/' . $this->image);
+        }
+        
+        // إذا كان المسار كاملاً
+        return asset($this->image);
+    }
+
+    /**
      * علاقة الحملة التطوعية بالشركة أو الفريق التطوعي
      * Ad belongs to a Company relationship
      */

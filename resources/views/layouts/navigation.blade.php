@@ -16,7 +16,7 @@
                         {{ __('لوحة التحكم') }}
                     </x-nav-link>
                     <x-nav-link :href="route('ads.index')" :active="request()->routeIs('ads.*')">
-                        {{ __('الحملات التطوعية') }}
+                        {{ __('الحملات') }}
                     </x-nav-link>
                     <x-nav-link :href="route('job-offers.index')" :active="request()->routeIs('job-offers.*')">
                         {{ __('فرص التطوع') }}
@@ -24,12 +24,20 @@
                     <x-nav-link :href="route('organizations.index')" :active="request()->routeIs('organizations.*')">
                         {{ __('المنظمات') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('support.my-tickets')" :active="request()->routeIs('support.my-tickets')">
+                        {{ __('تذاكر الدعم') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('map')" :active="request()->routeIs('map')">
                         {{ __('الخريطة') }}
                     </x-nav-link>
                     @can('manage-volunteers')
                     <x-nav-link :href="route('participation-requests.index')" :active="request()->routeIs('participation-requests.*')">
                         {{ __('طلبات المشاركة') }}
+                    </x-nav-link>
+                    @endcan
+                    @can('viewNewsletterSubscribers')
+                    <x-nav-link :href="route('admin.newsletters.index')" :active="request()->routeIs('admin.newsletters.*')">
+                        {{ __('النشرة البريدية') }}
                     </x-nav-link>
                     @endcan
                 </div>
@@ -91,7 +99,7 @@
                 {{ __('لوحة التحكم') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('ads.index')" :active="request()->routeIs('ads.*')">
-                {{ __('الحملات التطوعية') }}
+                {{ __('الحملات') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('job-offers.index')" :active="request()->routeIs('job-offers.*')">
                 {{ __('فرص التطوع') }}
@@ -99,12 +107,20 @@
             <x-responsive-nav-link :href="route('organizations.index')" :active="request()->routeIs('organizations.*')">
                 {{ __('المنظمات') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('support.my-tickets')" :active="request()->routeIs('support.my-tickets')">
+                {{ __('تذاكر الدعم') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('map')" :active="request()->routeIs('map')">
                 {{ __('الخريطة') }}
             </x-responsive-nav-link>
             @can('manage-volunteers')
             <x-responsive-nav-link :href="route('participation-requests.index')" :active="request()->routeIs('participation-requests.*')">
                 {{ __('طلبات المشاركة') }}
+            </x-responsive-nav-link>
+            @endcan
+            @can('viewNewsletterSubscribers')
+            <x-responsive-nav-link :href="route('admin.newsletters.index')" :active="request()->routeIs('admin.newsletters.*')">
+                {{ __('النشرة البريدية') }}
             </x-responsive-nav-link>
             @endcan
         </div>

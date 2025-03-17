@@ -37,5 +37,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('join-campaign', fn($user) => $user->hasAnyRole(['مستخدم', 'فرقة تطوعية', 'منظمة']));
         Gate::define('manage-volunteers', fn($user) => $user->hasRole(['فرقة تطوعية', 'منظمة']));
         Gate::define('view-reports', fn($user) => $user->hasRole('منظمة'));
+        
+        // صلاحيات النشرة البريدية
+        Gate::define('viewNewsletterSubscribers', fn($user) => $user->hasRole('مشرف'));
+        Gate::define('deleteNewsletterSubscribers', fn($user) => $user->hasRole('مشرف'));
     }
 }

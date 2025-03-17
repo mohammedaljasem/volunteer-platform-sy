@@ -27,7 +27,7 @@
                         </div>
                     @endif
                     
-                    <form action="{{ route('job-offers.store') }}" method="POST">
+                    <form action="{{ route('job-offers.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
                         <div class="mb-4">
@@ -40,6 +40,14 @@
                             <textarea name="description" id="description" rows="6" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>{{ old('description') }}</textarea>
                             <p class="mt-1 text-sm text-gray-500">
                                 {{ __('اكتب وصفاً مفصلاً للفرصة، بما في ذلك المهام المطلوبة والمهارات اللازمة.') }}
+                            </p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="image" class="block text-sm font-medium text-gray-700">{{ __('صورة الفرصة') }}</label>
+                            <input type="file" name="image" id="image" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" accept="image/*">
+                            <p class="mt-1 text-sm text-gray-500">
+                                {{ __('يفضل صورة بأبعاد 16:9 للحصول على أفضل عرض. الحد الأقصى للحجم 2 ميجابايت.') }}
                             </p>
                         </div>
                         

@@ -48,10 +48,19 @@ class JobOfferController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'requirements' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'organization_id' => 'required|exists:organizations,id',
+            'city_id' => 'nullable|exists:cities,id',
             'location_id' => 'nullable|numeric',
             'deadline' => 'required|date|after:today',
+            'start_date' => 'nullable|date',
         ]);
+        
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('job_offers', 'public');
+            $validatedData['image'] = $path;
+        }
         
         $validatedData['status'] = 'متاحة';
         
@@ -98,11 +107,25 @@ class JobOfferController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'requirements' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'organization_id' => 'required|exists:organizations,id',
+            'city_id' => 'nullable|exists:cities,id',
             'status' => 'required|in:متاحة,مغلقة,قادمة',
             'location_id' => 'nullable|numeric',
             'deadline' => 'required|date',
+            'start_date' => 'nullable|date',
         ]);
+        
+        if ($request->hasFile('image')) {
+            // حذف الصورة القديمة إذا وجدت
+            if ($jobOffer->image && strpos($jobOffer->image, 'job_offers/') === 0) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($jobOffer->image);
+            }
+            
+            $path = $request->file('image')->store('job_offers', 'public');
+            $validatedData['image'] = $path;
+        }
         
         $jobOffer->update($validatedData);
         

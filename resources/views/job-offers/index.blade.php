@@ -73,18 +73,18 @@
                     <!-- قائمة الفرص -->
                     <div id="opportunities">
                         <h3 class="text-xl font-bold text-gray-800 mb-6">فرص التطوع المتاحة</h3>
-                        
-                        @if($jobOffers->isEmpty())
+                    
+                    @if($jobOffers->isEmpty())
                             <div class="text-center py-12 bg-gray-50 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                                 </svg>
                                 <p class="text-gray-600 text-lg">{{ __('لا توجد فرص تطوع متاحة حالياً') }}</p>
                                 <p class="text-gray-500 mt-2">يرجى العودة لاحقًا أو البحث بمعايير مختلفة.</p>
-                            </div>
-                        @else
+                        </div>
+                    @else
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                @foreach($jobOffers as $jobOffer)
+                            @foreach($jobOffers as $jobOffer)
                                     <div class="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white relative">
                                         <div class="absolute top-4 left-4">
                                             <span class="px-3 py-1 text-xs font-semibold rounded-full 
@@ -94,6 +94,19 @@
                                                 {{ $jobOffer->status }}
                                             </span>
                                         </div>
+                                        
+                                        @if($jobOffer->image)
+                                        <div class="h-48 overflow-hidden">
+                                            <img src="{{ $jobOffer->image_url }}" alt="{{ $jobOffer->title }}" class="w-full h-full object-cover">
+                                        </div>
+                                        @else
+                                        <div class="h-48 bg-gray-100 flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                        @endif
+                                        
                                         <div class="p-6">
                                             <div class="flex items-start">
                                                 <div class="bg-secondary bg-opacity-10 p-3 rounded-full ml-4">
@@ -106,10 +119,10 @@
                                                     <div class="flex flex-wrap gap-2 mb-3">
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                             {{ $jobOffer->category }}
-                                                        </span>
+                                            </span>
                                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                                             {{ $jobOffer->location }}
-                                                        </span>
+                                            </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -148,15 +161,15 @@
                                                     </form>
                                                 @endif
                                             </div>
-                                        </div>
                                     </div>
-                                @endforeach
-                            </div>
-                            
-                            <div class="mt-6">
-                                {{ $jobOffers->links() }}
-                            </div>
-                        @endif
+                                </div>
+                            @endforeach
+                        </div>
+                        
+                        <div class="mt-6">
+                            {{ $jobOffers->links() }}
+                        </div>
+                    @endif
                     </div>
                 </div>
             </div>

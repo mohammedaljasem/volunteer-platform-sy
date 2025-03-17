@@ -32,7 +32,7 @@
                         </div>
                     @endif
                     
-                    <form action="{{ route('job-offers.update', $jobOffer) }}" method="POST">
+                    <form action="{{ route('job-offers.update', $jobOffer) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         
@@ -46,6 +46,20 @@
                             <textarea name="description" id="description" rows="6" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>{{ old('description', $jobOffer->description) }}</textarea>
                             <p class="mt-1 text-sm text-gray-500">
                                 {{ __('اكتب وصفاً مفصلاً للفرصة، بما في ذلك المهام المطلوبة والمهارات اللازمة.') }}
+                            </p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="image" class="block text-sm font-medium text-gray-700">{{ __('صورة الفرصة') }}</label>
+                            @if ($jobOffer->image)
+                                <div class="mt-2 mb-3">
+                                    <img src="{{ $jobOffer->image_url }}" alt="{{ $jobOffer->title }}" class="h-40 w-auto object-contain rounded">
+                                    <p class="text-xs text-gray-500 mt-1">الصورة الحالية</p>
+                                </div>
+                            @endif
+                            <input type="file" name="image" id="image" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" accept="image/*">
+                            <p class="mt-1 text-sm text-gray-500">
+                                {{ __('اترك هذا الحقل فارغاً إذا كنت تريد الاحتفاظ بالصورة الحالية. يفضل صورة بأبعاد 16:9 للحصول على أفضل عرض. الحد الأقصى للحجم 2 ميجابايت.') }}
                             </p>
                         </div>
                         
