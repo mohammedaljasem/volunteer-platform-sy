@@ -9,6 +9,7 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/debug', [ProfileController::class, 'debug'])->name('profile.debug');
     
     // مسارات الحملات التطوعية
     Route::get('/ads', [AdController::class, 'index'])->name('ads.index');
@@ -90,6 +92,45 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/newsletters', [App\Http\Controllers\NewsletterController::class, 'index'])->name('admin.newsletters.index');
     Route::delete('/admin/newsletters/{id}', [App\Http\Controllers\NewsletterController::class, 'destroy'])->name('admin.newsletters.destroy');
+});
+
+// Diagnostic route for storage issues
+Route::get('/storage-diagnostic', function () {
+    // Check and create directories if they don't exist
+    if (!Storage::disk('public')->exists('profile-photos')) {
+        Storage::disk('public')->makeDirectory('profile-photos', 0777);
+    }
+    
+    // Check if the storage link exists
+    $storageLink = public_path('storage');
+    $storageTarget = storage_path('app/public');
+    
+    $linkExists = file_exists($storageLink) && is_link($storageLink);
+    $linkTarget = $linkExists ? readlink($storageLink) : 'N/A';
+    
+    // Test file creation
+    $testFilePath = 'profile-photos/test-file-' . time() . '.txt';
+    $testFileContent = 'This is a test file created at ' . now();
+    $fileCreated = Storage::disk('public')->put($testFilePath, $testFileContent);
+    
+    // Get file URL
+    $fileUrl = $fileCreated ? Storage::url($testFilePath) : 'N/A';
+    
+    // Show diagnostic info
+    return response()->json([
+        'storage_link_exists' => $linkExists,
+        'storage_link_target' => $linkTarget,
+        'expected_target' => $storageTarget,
+        'link_correct' => $linkTarget === $storageTarget,
+        'profile_photos_dir_exists' => Storage::disk('public')->exists('profile-photos'),
+        'test_file_created' => $fileCreated,
+        'test_file_path' => $testFilePath,
+        'test_file_url' => $fileUrl,
+        'filesystem_disk' => config('filesystems.default'),
+        'public_disk_root' => config('filesystems.disks.public.root'),
+        'public_disk_url' => config('filesystems.disks.public.url'),
+        'app_url' => config('app.url'),
+    ]);
 });
 
 require __DIR__.'/auth.php';

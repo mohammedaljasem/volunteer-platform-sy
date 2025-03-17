@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -26,6 +27,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'notification_preference',
+        'profile_photo_path',
     ];
 
     /**
@@ -39,6 +41,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that should be appended to arrays.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'profile_photo_url',
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -49,6 +60,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the URL of the user's profile photo.
+     *
+     * @return string
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->profile_photo_path) {
+            return asset('storage/' . $this->profile_photo_path);
+        }
+        
+        return asset('images/default-avatar.svg');
     }
 
     /**

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصميم صفحة الملف الشخصي - منصة المتطوعين</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <h1 class="text-2xl font-bold text-gray-900">الملف الشخصي</h1>
+        </div>
+    </header>
+
+    <main class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <!-- Profile Tabs -->
+                    <div class="mb-6 border-b border-gray-200">
+                        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="tabs">
+                            <li class="mr-2">
+                                <button data-tab="personal-info" class="inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active-tab">
+                                    <i class="fas fa-user mr-2"></i>المعلومات الشخصية
+                                </button>
+                            </li>
+                            <li class="mr-2">
+                                <button data-tab="security" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300">
+                                    <i class="fas fa-lock mr-2"></i>الأمان
+                                </button>
+                            </li>
+                            <li>
+                                <button data-tab="danger-zone" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>منطقة الخطر
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div>
+                        <!-- Personal Information Tab -->
+                        <div id="personal-info" class="tab-content active">
+                            <h2 class="text-lg font-medium text-gray-900">المعلومات الشخصية</h2>
+                            <p class="mt-1 text-sm text-gray-600">تحديث معلومات حسابك وعنوان بريدك الإلكتروني.</p>
+
+                            <form class="mt-6 space-y-6">
+                                <!-- Profile Picture Section -->
+                                <div class="flex flex-col sm:flex-row gap-6 mb-6">
+                                    <div class="flex flex-col items-center">
+                                        <div class="relative mb-4">
+                                            <img id="preview-image" src="https://via.placeholder.com/128" alt="صورة المستخدم" class="w-32 h-32 rounded-full object-cover border-4 border-gray-200">
+                                            <button type="button" id="change-photo-btn" class="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full p-2 hover:bg-blue-700 transition">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <input type="file" id="profile_photo" name="profile_photo" class="hidden" accept="image/*">
+                                        <div class="text-sm text-gray-500 text-center">
+                                            انقر لتحديث صورتك الشخصية
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4 flex-1">
+                                        <!-- Name -->
+                                        <div>
+                                            <label for="name" class="block text-sm font-medium text-gray-700">الاسم</label>
+                                            <input id="name" name="name" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" value="أحمد محمد">
+                                        </div>
+
+                                        <!-- Email -->
+                                        <div>
+                                            <label for="email" class="block text-sm font-medium text-gray-700">البريد الإلكتروني</label>
+                                            <input id="email" name="email" type="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" value="ahmed@example.com">
+                                        </div>
+
+                                        <!-- Phone Number -->
+                                        <div>
+                                            <label for="phone" class="block text-sm font-medium text-gray-700">رقم الهاتف</label>
+                                            <input id="phone" name="phone" type="tel" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" value="+971 55 123 4567">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-4">
+                                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                        حفظ
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Security Tab -->
+                        <div id="security" class="tab-content">
+                            <h2 class="text-lg font-medium text-gray-900">تحديث كلمة المرور</h2>
+                            <p class="mt-1 text-sm text-gray-600">تأكد من أن حسابك يستخدم كلمة مرور طويلة وعشوائية للبقاء آمنًا.</p>
+
+                            <form class="mt-6 space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="current_password" class="block text-sm font-medium text-gray-700">كلمة المرور الحالية</label>
+                                        <div class="relative">
+                                            <input id="current_password" name="current_password" type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            <button type="button" class="toggle-password absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 mt-1">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-6">
+                                        <div>
+                                            <label for="password" class="block text-sm font-medium text-gray-700">كلمة المرور الجديدة</label>
+                                            <div class="relative">
+                                                <input id="password" name="password" type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                <button type="button" class="toggle-password absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 mt-1">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">تأكيد كلمة المرور</label>
+                                            <div class="relative">
+                                                <input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                <button type="button" class="toggle-password absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 mt-1">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <div class="password-strength-meter">
+                                        <div class="text-sm font-medium mb-1">قوة كلمة المرور</div>
+                                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                            <div class="password-strength-bar h-full bg-red-500" style="width: 25%"></div>
+                                        </div>
+                                        <div class="password-strength-text text-xs mt-1 text-gray-600">ضعيف جدًا</div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-4">
+                                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                        حفظ
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Danger Zone Tab -->
+                        <div id="danger-zone" class="tab-content">
+                            <h2 class="text-lg font-medium text-red-600">حذف الحساب</h2>
+                            <p class="mt-1 text-sm text-gray-600">بمجرد حذف حسابك، سيتم حذف جميع موارده وبياناته نهائيًا. قبل حذف حسابك، يرجى تنزيل أي بيانات أو معلومات ترغب في الاحتفاظ بها.</p>
+
+                            <div class="mt-6">
+                                <div class="bg-red-50 p-4 rounded-md border border-red-200">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-exclamation-triangle text-red-500"></i>
+                                        </div>
+                                        <div class="mr-3">
+                                            <h3 class="text-sm font-medium text-red-800">تحذير: لا يمكن التراجع عن هذا الإجراء</h3>
+                                            <div class="mt-2 text-sm text-red-700">
+                                                <p>عند حذف حسابك:</p>
+                                                <ul class="list-disc pr-5 mt-1 space-y-1">
+                                                    <li>سيتم حذف جميع معلوماتك الشخصية</li>
+                                                    <li>ستتم إزالة مشاركتك في أي أحداث</li>
+                                                    <li>سيتم إخفاء هوية مساهماتك</li>
+                                                    <li>لا يمكن استعادة حسابك</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <button id="delete-account-btn" class="w-full sm:w-auto flex justify-center items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    <i class="fas fa-trash-alt mr-2"></i>
+                                    حذف الحساب
+                                </button>
+                            </div>
+
+                            <!-- Delete Account Modal -->
+                            <div id="delete-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
+                                <div class="bg-white rounded-lg max-w-md w-full">
+                                    <div class="p-6">
+                                        <div class="text-center mb-6">
+                                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                                                <i class="fas fa-exclamation-triangle text-2xl text-red-600"></i>
+                                            </div>
+                                            <h2 class="text-lg font-medium text-gray-900">
+                                                هل أنت متأكد تمامًا من رغبتك في حذف حسابك؟
+                                            </h2>
+                                        </div>
+
+                                        <p class="text-sm text-gray-600">
+                                            بمجرد حذف حسابك، سيتم حذف جميع موارده وبياناته نهائيًا. الرجاء إدخال كلمة المرور الخاصة بك لتأكيد رغبتك في حذف حسابك نهائيًا.
+                                        </p>
+
+                                        <div class="mt-6">
+                                            <label for="confirm_password" class="sr-only">كلمة المرور</label>
+                                            <div class="relative">
+                                                <input id="confirm_password" name="password" type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500" placeholder="كلمة المرور">
+                                                <button type="button" class="toggle-password absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-6 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+                                            <button id="cancel-delete" class="w-full sm:w-auto justify-center flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                                <i class="fas fa-times mr-2"></i>إلغاء
+                                            </button>
+                                            <button id="confirm-delete" class="w-full sm:w-auto justify-center flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                                <i class="fas fa-trash-alt mr-2"></i>حذف الحساب
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabs = document.querySelectorAll('#tabs button');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab content
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Update active tab styling
+                    tabs.forEach(t => {
+                        t.classList.remove('text-blue-600', 'border-blue-600');
+                        t.classList.add('border-transparent');
+                    });
+                    this.classList.remove('border-transparent');
+                    this.classList.add('text-blue-600', 'border-blue-600');
+                });
+            });
+
+            // Profile picture functionality
+            const profilePhotoInput = document.getElementById('profile_photo');
+            const previewImage = document.getElementById('preview-image');
+            const changePhotoBtn = document.getElementById('change-photo-btn');
+
+            changePhotoBtn.addEventListener('click', function() {
+                profilePhotoInput.click();
+            });
+
+            profilePhotoInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Password toggle functionality
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.parentNode.querySelector('input');
+                    const icon = this.querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
+            });
+
+            // Password strength meter
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    const password = this.value;
+                    const strengthBar = document.querySelector('.password-strength-bar');
+                    const strengthText = document.querySelector('.password-strength-text');
+                    
+                    if (password.length > 0) {
+                        // Calculate password strength
+                        let strength = 0;
+                        
+                        // Length check
+                        if (password.length >= 8) strength += 25;
+                        
+                        // Uppercase check
+                        if (/[A-Z]/.test(password)) strength += 25;
+                        
+                        // Lowercase check
+                        if (/[a-z]/.test(password)) strength += 25;
+                        
+                        // Number/special character check
+                        if (/[0-9]/.test(password) || /[^A-Za-z0-9]/.test(password)) strength += 25;
+                        
+                        // Update UI
+                        strengthBar.style.width = strength + '%';
+                        
+                        // Update color and text based on strength
+                        if (strength < 25) {
+                            strengthBar.className = 'password-strength-bar h-full bg-red-500';
+                            strengthText.textContent = 'ضعيف جدًا';
+                        } else if (strength < 50) {
+                            strengthBar.className = 'password-strength-bar h-full bg-orange-500';
+                            strengthText.textContent = 'ضعيف';
+                        } else if (strength < 75) {
+                            strengthBar.className = 'password-strength-bar h-full bg-yellow-500';
+                            strengthText.textContent = 'متوسط';
+                        } else {
+                            strengthBar.className = 'password-strength-bar h-full bg-green-500';
+                            strengthText.textContent = 'قوي';
+                        }
+                    }
+                });
+            }
+
+            // Delete account modal
+            const deleteAccountBtn = document.getElementById('delete-account-btn');
+            const deleteModal = document.getElementById('delete-modal');
+            const cancelDeleteBtn = document.getElementById('cancel-delete');
+            
+            deleteAccountBtn.addEventListener('click', function() {
+                deleteModal.classList.remove('hidden');
+            });
+            
+            cancelDeleteBtn.addEventListener('click', function() {
+                deleteModal.classList.add('hidden');
+            });
+
+            // Close modal when clicking outside
+            deleteModal.addEventListener('click', function(e) {
+                if (e.target === deleteModal) {
+                    deleteModal.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
