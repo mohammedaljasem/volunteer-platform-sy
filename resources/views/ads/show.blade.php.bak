@@ -151,7 +151,7 @@
                                         @csrf
                                         <div class="mb-4">
                                             <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">مبلغ التبرع (ل.س)</label>
-                                            <input type="number" id="amount" name="amount" min="100" step="10" class="form-input" placeholder="أدخل مبلغ التبرع" required>
+                                            <input type="number" id="amount" name="amount" min="1000" step="500" class="form-input" placeholder="أدخل مبلغ التبرع" required>
                                         </div>
                                         <div class="mb-4">
                                             <label for="payment_method" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">طريقة الدفع</label>
@@ -160,15 +160,6 @@
                                                 <option value="تحويل بنكي">تحويل بنكي</option>
                                                 <option value="محفظة">الدفع من محفظتي</option>
                                             </select>
-                                        </div>
-                                        <div class="mb-4">
-                                            <div class="flex items-center">
-                                                <input type="checkbox" id="is_recurring" name="is_recurring" value="1" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                                <label for="is_recurring" class="mr-2 block text-sm text-gray-700 dark:text-gray-300">
-                                                    تبرع شهري متكرر
-                                                </label>
-                                            </div>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">سيتم خصم هذا المبلغ شهرياً بشكل تلقائي</p>
                                         </div>
                                         <button type="submit" class="w-full btn-primary">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">

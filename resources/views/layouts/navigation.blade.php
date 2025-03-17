@@ -62,6 +62,9 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('الملف الشخصي') }}
                         </x-dropdown-link>
+                        <x-dropdown-link :href="route('wallet.index')">
+                            {{ __('محفظتي') }} <span class="text-green-600">({{ number_format(auth()->user()->wallet->balance ?? 0, 0) }} ل.س)</span>
+                        </x-dropdown-link>
                         <x-dropdown-link :href="route('participation-requests.my')">
                             {{ __('طلبات المشاركة الخاصة بي') }}
                         </x-dropdown-link>
@@ -135,6 +138,9 @@
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('الملف الشخصي') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('wallet.index')">
+                    {{ __('محفظتي') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('participation-requests.my')">
                     {{ __('طلبات المشاركة الخاصة بي') }}

@@ -152,4 +152,30 @@ class User extends Authenticatable
     {
         return $this->points()->sum('points');
     }
+
+    /**
+     * علاقة المستخدم بالمحفظة
+     * User has one Wallet relationship
+     */
+    public function wallet()
+    {
+        return $this->hasOne(\App\Models\Wallet::class);
+    }
+
+    /**
+     * الحصول على محفظة المستخدم أو إنشاء محفظة جديدة
+     */
+    public function getWalletAttribute()
+    {
+        $wallet = $this->wallet()->first();
+        
+        if (!$wallet) {
+            $wallet = \App\Models\Wallet::create([
+                'user_id' => $this->id,
+                'balance' => 0
+            ]);
+        }
+        
+        return $wallet;
+    }
 }

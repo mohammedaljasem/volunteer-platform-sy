@@ -1,0 +1,5 @@
+                                            <select id="payment_method" name="payment_method" class="form-input" required>
+                                                <option value="نقدي">نقدي</option>
+                                                <option value="تحويل بنكي">تحويل بنكي</option>
+                                                <option value="محفظة">الدفع من محفظتي</option>
+                                            </select> 

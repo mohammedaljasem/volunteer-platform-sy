@@ -16,12 +16,13 @@ class Donation extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'amount',
         'user_id',
         'ad_id',
+        'amount',
+        'payment_method',
         'date',
         'is_recurring',
-        'payment_method',
+        'is_auto_processed',
     ];
 
     /**
@@ -30,8 +31,9 @@ class Donation extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'date' => 'date',
+        'date' => 'datetime',
         'is_recurring' => 'boolean',
+        'is_auto_processed' => 'boolean',
         'amount' => 'decimal:2',
     ];
 

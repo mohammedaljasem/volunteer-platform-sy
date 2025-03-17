@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -42,6 +43,7 @@ Route::middleware('auth')->group(function () {
     // مسارات التبرع للحملات
     Route::get('/ads/{ad}/donate', [AdController::class, 'showDonateForm'])->name('ads.donate');
     Route::post('/ads/{ad}/donate', [AdController::class, 'donate'])->name('ads.donate.store');
+    Route::get('/ads/demo/donate', function() { return view('ads.demo'); })->name('ads.demo');
     
     // مسارات التعليق على الحملات
     Route::post('/ads/{ad}/comment', [AdController::class, 'comment'])->name('ads.comment');
@@ -86,6 +88,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-tickets', [App\Http\Controllers\SupportController::class, 'myTickets'])->name('support.my-tickets');
     Route::get('/ticket/{ticket}', [App\Http\Controllers\SupportController::class, 'showTicket'])->name('support.ticket.show');
     Route::post('/ticket/{ticket}/reply', [App\Http\Controllers\SupportController::class, 'replyToTicket'])->name('support.ticket.reply');
+
+    // مسارات المحفظة
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+    Route::post('/wallet/charge', [WalletController::class, 'charge'])->name('wallet.charge');
 });
 
 // مسارات المشرف - إدارة النشرة البريدية

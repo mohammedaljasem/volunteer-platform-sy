@@ -174,12 +174,38 @@ class AdController extends Controller
         $this->authorize('donate', $ad);
         
         $validatedData = $request->validate([
-            'amount' => 'required|numeric|min:1',
-            'payment_method' => 'required|in:نقدي,تحويل بنكي',
+            'amount' => 'required|numeric|min:100',
+            'payment_method' => 'required|in:نقدي,تحويل بنكي,محفظة',
             'is_recurring' => 'nullable|boolean',
         ]);
         
-        $validatedData['user_id'] = auth()->id();
+        $user = auth()->user();
+        $amount = $validatedData['amount'];
+        
+        // إذا كانت طريقة الدفع هي المحفظة، نتحقق من الرصيد
+        if ($validatedData['payment_method'] === 'محفظة') {
+            // البحث عن محفظة المستخدم أو إنشاء محفظة جديدة
+            $wallet = \App\Models\Wallet::firstOrCreate(
+                ['user_id' => $user->id],
+                ['balance' => 0]
+            );
+            
+            // التحقق من كفاية الرصيد
+            if ($wallet->balance < $amount) {
+                return redirect()->route('ads.donate', $ad)
+                    ->with('error', "رصيد محفظتك غير كافٍ. الرصيد الحالي: {$wallet->balance} ليرة سورية")
+                    ->withInput();
+            }
+            
+            // خصم المبلغ من المحفظة
+            if (!$wallet->withdraw($amount)) {
+                return redirect()->route('ads.donate', $ad)
+                    ->with('error', 'فشلت عملية السحب من المحفظة، يرجى المحاولة مرة أخرى')
+                    ->withInput();
+            }
+        }
+        
+        $validatedData['user_id'] = $user->id;
         $validatedData['ad_id'] = $ad->id;
         $validatedData['date'] = now(); // تاريخ اليوم
         $validatedData['is_recurring'] = $request->has('is_recurring');
@@ -188,7 +214,7 @@ class AdController extends Controller
         $donation = Donation::create($validatedData);
         
         // تحديث المبلغ الحالي للحملة
-        $ad->current_amount += $validatedData['amount'];
+        $ad->current_amount += $amount;
         
         // إذا وصلنا للمبلغ المستهدف أو تجاوزناه، نغير حالة الحملة إلى مكتملة
         if ($ad->current_amount >= $ad->goal_amount) {
@@ -199,7 +225,7 @@ class AdController extends Controller
         
         // منح نقاط للمستخدم (10 نقاط لكل 100 وحدة من المبلغ)
         $user = auth()->user();
-        $pointsToAward = max(10, floor($validatedData['amount'] / 100) * 10);
+        $pointsToAward = max(10, floor($amount / 100) * 10);
         
         // منح النقاط لجميع المستخدمين
         UserPoint::create([

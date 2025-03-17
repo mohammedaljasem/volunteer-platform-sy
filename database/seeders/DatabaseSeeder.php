@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             AdSeeder::class,
             JobOfferSeeder::class,
             LocationsSeeder::class,
+            WalletSeeder::class,
         ]);
 
         // Create a test user

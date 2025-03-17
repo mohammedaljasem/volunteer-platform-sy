@@ -9,6 +9,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
+                    
+                    @if (session('error'))
+                        <div class="mb-4 p-4 bg-red-100 text-red-700 border border-red-200 rounded">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                    
                     <form method="POST" action="{{ route('ads.donate.store', $ad) }}">
                         @csrf
                         
@@ -22,11 +29,8 @@
                                 <span>المبلغ الحالي:</span>
                                 <span class="font-bold text-green-600 dark:text-green-400">{{ number_format($ad->current_amount, 0) }} ل.س</span>
                             </div>
-                            <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-4 mb-2">
-                                <div class="bg-blue-600 h-4 rounded-full" style="width: {{ $ad->progress_percentage }}%"></div>
-                            </div>
-                            <div class="text-center">
-                                <span class="text-sm font-semibold">{{ $ad->progress_percentage }}% مكتمل</span>
+                            <div class="text-center mb-2">
+                                <span class="text-lg font-semibold">نسبة الإنجاز: {{ $ad->progress_percentage }}%</span>
                             </div>
                         </div>
 
@@ -42,6 +46,17 @@
                                 <option value="">اختر طريقة الدفع</option>
                                 <option value="نقدي" {{ old('payment_method') == 'نقدي' ? 'selected' : '' }}>نقدي</option>
                                 <option value="تحويل بنكي" {{ old('payment_method') == 'تحويل بنكي' ? 'selected' : '' }}>تحويل بنكي</option>
+                                <option value="محفظة" {{ old('payment_method') == 'محفظة' ? 'selected' : '' }}>
+                                    الدفع من محفظتي
+                                    @php
+                                        // البحث عن محفظة المستخدم أو إنشاء محفظة جديدة
+                                        $wallet = \App\Models\Wallet::firstOrCreate(
+                                            ['user_id' => auth()->id()],
+                                            ['balance' => 0]
+                                        );
+                                        echo ' (' . number_format($wallet->balance, 0) . ' ل.س)';
+                                    @endphp
+                                </option>
                             </select>
                             <x-input-error :messages="$errors->get('payment_method')" class="mt-2" />
                         </div>
@@ -64,4 +79,4 @@
             </div>
         </div>
     </div>
-</x-app-layout> 
+</x-app-layout>
