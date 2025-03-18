@@ -27,11 +27,21 @@ class DashboardController extends Controller
                                ->where('status', 'upcoming')
                                ->count();
         
-        // الحملات الموصى بها - أحدث 3 حملات نشطة
+        // الحملات الموصى بها - زيادة عدد الحملات إلى 4 وعرض الحملات النشطة حتى لو لم تكن جديدة
         $recommendedCampaigns = Ad::where('status', 'active')
                                 ->orderBy('created_at', 'desc')
-                                ->take(3)
+                                ->take(4)
                                 ->get();
+        
+        // في حالة عدم وجود حملات نشطة كافية، نعرض أي حملات متاحة بغض النظر عن حالتها
+        if ($recommendedCampaigns->count() < 4) {
+            $additionalCampaigns = Ad::whereNotIn('id', $recommendedCampaigns->pluck('id')->toArray())
+                                   ->orderBy('created_at', 'desc')
+                                   ->take(4 - $recommendedCampaigns->count())
+                                   ->get();
+            
+            $recommendedCampaigns = $recommendedCampaigns->concat($additionalCampaigns);
+        }
         
         // حساب نسبة التقدم لكل حملة
         foreach ($recommendedCampaigns as $campaign) {
