@@ -558,19 +558,29 @@
             <h2 class="text-center section-title">شركاؤنا</h2>
             <div class="row justify-content-center align-items-center mt-5">
                 <div class="col-6 col-md-2 mb-4 text-center">
-                    <img src="{{ asset('images/partners/unicef.svg') }}" alt="اليونيسف" class="img-fluid" style="max-height: 80px;">
+                    <a href="https://www.unicef.org/ar" target="_blank" rel="noopener noreferrer">
+                        <img src="{{ asset('images/partners/unicef.svg') }}" alt="اليونيسف" class="img-fluid" style="max-height: 80px;">
+                    </a>
                 </div>
                 <div class="col-6 col-md-2 mb-4 text-center">
-                    <img src="{{ asset('images/partners/unhcr.svg') }}" alt="مفوضية الأمم المتحدة لشؤون اللاجئين" class="img-fluid" style="max-height: 80px;">
+                    <a href="https://www.unhcr.org/ar/" target="_blank" rel="noopener noreferrer">
+                        <img src="{{ asset('images/partners/unhcr.svg') }}" alt="مفوضية الأمم المتحدة لشؤون اللاجئين" class="img-fluid" style="max-height: 80px;">
+                    </a>
                 </div>
                 <div class="col-6 col-md-2 mb-4 text-center">
-                    <img src="{{ asset('images/partners/syrian-red-crescent.svg') }}" alt="الهلال الأحمر السوري" class="img-fluid" style="max-height: 80px;">
+                    <a href="https://sarc.sy/ar/" target="_blank" rel="noopener noreferrer">
+                        <img src="{{ asset('images/partners/syrian-red-crescent.svg') }}" alt="الهلال الأحمر السوري" class="img-fluid" style="max-height: 80px;">
+                    </a>
                 </div>
                 <div class="col-6 col-md-2 mb-4 text-center">
-                    <img src="{{ asset('images/partners/undp.svg') }}" alt="برنامج الأمم المتحدة الإنمائي" class="img-fluid" style="max-height: 80px;">
+                    <a href="https://www.undp.org/ar/syria" target="_blank" rel="noopener noreferrer">
+                        <img src="{{ asset('images/partners/undp.svg') }}" alt="برنامج الأمم المتحدة الإنمائي" class="img-fluid" style="max-height: 80px;">
+                    </a>
                 </div>
                 <div class="col-6 col-md-2 mb-4 text-center">
-                    <img src="{{ asset('images/partners/wfp.svg') }}" alt="برنامج الغذاء العالمي" class="img-fluid" style="max-height: 80px;">
+                    <a href="https://www.wfp.org/ar" target="_blank" rel="noopener noreferrer">
+                        <img src="{{ asset('images/partners/wfp.svg') }}" alt="برنامج الغذاء العالمي" class="img-fluid" style="max-height: 80px;">
+                    </a>
                 </div>
             </div>
         </div>
