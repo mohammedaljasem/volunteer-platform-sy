@@ -20,21 +20,37 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Create permissions
         $permissions = [
+            // صلاحيات الحملات
             'create-campaign',
             'edit-campaign',
             'delete-campaign',
             'view-campaigns',
             'join-campaign',
             'manage-volunteers',
+            
+            // صلاحيات عامة
             'view-reports',
             'donate-to-campaign',
             'comment-on-campaign',
             'create-job-offer',
             'request-participation',
+            
+            // صلاحيات الأدمن الخاصة
+            'manage-all',
+            'delete-any-campaign',     // حذف أي حملة بغض النظر عن المالك
+            'edit-any-campaign',       // تعديل أي حملة بغض النظر عن المالك
+            'delete-any-user',         // حذف أي مستخدم
+            'edit-any-user',           // تعديل بيانات أي مستخدم
+            'manage-organizations',    // إدارة المنظمات (إضافة، تعديل، حذف)
+            'manage-teams',            // إدارة فرق التطوع
+            'manage-donations',        // إدارة التبرعات
+            'manage-local-ads',        // إدارة الإعلانات المحلية
+            'verify-organizations',    // التحقق من المنظمات
+            'access-admin-panel',      // الوصول إلى لوحة الأدمن
         ];
 
         foreach ($permissions as $permission) {
-            // Verificar si el permiso ya existe
+            // التحقق من وجود الصلاحية
             if (!Permission::where('name', $permission)->exists()) {
                 Permission::create(['name' => $permission]);
             }
@@ -74,5 +90,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'view-reports',
             'create-job-offer',
         ]);
+        
+        // Admin role - له كل الصلاحيات
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        
+        // إعطاء الأدمن جميع الصلاحيات الموجودة في النظام
+        $adminRole->givePermissionTo(Permission::all());
     }
 }

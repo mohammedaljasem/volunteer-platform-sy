@@ -110,35 +110,40 @@ class LocationsSeeder extends Seeder
                 'description' => 'منظمة تهتم بتقديم المساعدات الإنسانية للمتضررين',
                 'verified' => true,
                 'latitude' => 33.5074,
-                'longitude' => 36.3124
+                'longitude' => 36.3124,
+                'contact_email' => 'info@syria-relief.org'
             ],
             [
                 'name' => 'جمعية التكافل الاجتماعي',
                 'description' => 'جمعية خيرية تهدف إلى تحقيق التكافل الاجتماعي بين أفراد المجتمع',
                 'verified' => true,
                 'latitude' => 36.1963,
-                'longitude' => 37.2153
+                'longitude' => 37.2153,
+                'contact_email' => 'info@takaful.org'
             ],
             [
                 'name' => 'مؤسسة بناء المستقبل',
                 'description' => 'مؤسسة تهتم بتأهيل الشباب وتدريبهم على المهارات المختلفة',
                 'verified' => true,
                 'latitude' => 34.7298,
-                'longitude' => 36.7328
+                'longitude' => 36.7328,
+                'contact_email' => 'info@future-building.org'
             ],
             [
                 'name' => 'جمعية رعاية الأيتام',
                 'description' => 'جمعية تهتم برعاية الأيتام وتوفير احتياجاتهم',
                 'verified' => true,
                 'latitude' => 35.5345,
-                'longitude' => 35.8021
+                'longitude' => 35.8021,
+                'contact_email' => 'info@orphans-care.org'
             ],
             [
                 'name' => 'منظمة الصحة والتنمية',
                 'description' => 'منظمة تهتم بتقديم الخدمات الصحية وتعزيز التنمية المجتمعية',
                 'verified' => true,
                 'latitude' => 34.8921,
-                'longitude' => 35.8723
+                'longitude' => 35.8723,
+                'contact_email' => 'info@health-dev.org'
             ]
         ];
 

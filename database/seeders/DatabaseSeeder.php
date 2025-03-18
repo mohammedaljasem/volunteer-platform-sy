@@ -9,6 +9,7 @@ use App\Models\JobOffer;
 use App\Models\City;
 use App\Models\Organization;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,7 +27,23 @@ class DatabaseSeeder extends Seeder
             JobOfferSeeder::class,
             LocationsSeeder::class,
             WalletSeeder::class,
+            LocalAdSeeder::class,
         ]);
+
+        // Create admin user
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'مدير النظام',
+                'email' => 'admin@example.com',
+                'password' => Hash::make('password'), // كلمة المرور للاختبار فقط
+                'phone' => '0912345678',
+                'notification_preference' => 'email',
+            ]
+        );
+        
+        // Assign the 'admin' role to the admin user
+        $admin->assignRole('admin');
 
         // Create a test user
         $user = User::factory()->create([

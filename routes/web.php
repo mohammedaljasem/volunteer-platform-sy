@@ -11,6 +11,8 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NewsletterController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -99,12 +101,45 @@ Route::middleware('auth')->group(function () {
     // مسارات المحفظة
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
     Route::post('/wallet/charge', [WalletController::class, 'charge'])->name('wallet.charge');
+    
+    // مسارات الإعلانات المحلية
+    Route::resource('local-ads', App\Http\Controllers\LocalAdController::class);
 });
 
 // مسارات المشرف - إدارة النشرة البريدية
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/newsletters', [App\Http\Controllers\NewsletterController::class, 'index'])->name('admin.newsletters.index');
     Route::delete('/admin/newsletters/{id}', [App\Http\Controllers\NewsletterController::class, 'destroy'])->name('admin.newsletters.destroy');
+});
+
+// مسارات لوحة تحكم الأدمن
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    // لوحة التحكم الرئيسية
+    Route::get('/', [App\Http\Controllers\AdminController::class, 'index'])->name('index');
+    
+    // إدارة الحملات التطوعية
+    Route::get('/campaigns', [App\Http\Controllers\AdminController::class, 'campaigns'])->name('campaigns');
+    Route::get('/campaigns/{id}/edit', [App\Http\Controllers\AdminController::class, 'editCampaign'])->name('campaigns.edit');
+    Route::put('/campaigns/{id}', [App\Http\Controllers\AdminController::class, 'updateCampaign'])->name('campaigns.update');
+    Route::delete('/campaigns/{id}', [App\Http\Controllers\AdminController::class, 'deleteAd'])->name('campaigns.delete');
+    
+    // إدارة المستخدمين
+    Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('users');
+    Route::get('/users/{id}/edit', [App\Http\Controllers\AdminController::class, 'editUser'])->name('users.edit');
+    Route::put('/users/{id}', [App\Http\Controllers\AdminController::class, 'updateUser'])->name('users.update');
+    Route::delete('/users/{id}', [App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
+    
+    // إدارة المنظمات
+    Route::get('/organizations', [App\Http\Controllers\AdminController::class, 'organizations'])->name('organizations');
+    Route::post('/organizations/{id}/verify', [App\Http\Controllers\AdminController::class, 'verifyOrganization'])->name('organizations.verify');
+    
+    // إدارة الإعلانات المحلية
+    Route::get('/local-ads', [App\Http\Controllers\AdminController::class, 'localAds'])->name('local-ads');
+    Route::get('/local-ads/{id}/edit', [App\Http\Controllers\AdminController::class, 'editLocalAd'])->name('local-ads.edit');
+    Route::put('/local-ads/{id}', [App\Http\Controllers\AdminController::class, 'updateLocalAd'])->name('local-ads.update');
+    Route::post('/local-ads/{id}/approve', [App\Http\Controllers\AdminController::class, 'approveLocalAd'])->name('local-ads.approve');
+    Route::post('/local-ads/{id}/reject', [App\Http\Controllers\AdminController::class, 'rejectLocalAd'])->name('local-ads.reject');
+    Route::delete('/local-ads/{id}', [App\Http\Controllers\AdminController::class, 'deleteLocalAd'])->name('local-ads.delete');
 });
 
 // Diagnostic route for storage issues
@@ -144,6 +179,48 @@ Route::get('/storage-diagnostic', function () {
         'public_disk_url' => config('filesystems.disks.public.url'),
         'app_url' => config('app.url'),
     ]);
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    // أساسيات لوحة الأدمن
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    
+    // إدارة الحملات
+    Route::get('/admin/campaigns', [AdminController::class, 'campaigns'])->name('admin.campaigns');
+    Route::get('/admin/campaigns/{id}/edit', [AdminController::class, 'editCampaign'])->name('admin.campaigns.edit');
+    Route::put('/admin/campaigns/{id}', [AdminController::class, 'updateCampaign'])->name('admin.campaigns.update');
+    Route::delete('/admin/campaigns/{id}', [AdminController::class, 'deleteAd'])->name('admin.campaigns.delete');
+    
+    // إدارة المستخدمين
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/admin/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
+    Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+    Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+    
+    // إدارة المنظمات
+    Route::get('/admin/organizations', [AdminController::class, 'organizations'])->name('admin.organizations');
+    Route::post('/admin/organizations/{id}/verify', [AdminController::class, 'verifyOrganization'])->name('admin.organizations.verify');
+    Route::get('/admin/organizations/{id}/edit', [AdminController::class, 'editOrganization'])->name('admin.organizations.edit');
+    Route::put('/admin/organizations/{id}', [AdminController::class, 'updateOrganization'])->name('admin.organizations.update');
+    Route::delete('/admin/organizations/{id}', [AdminController::class, 'deleteOrganization'])->name('admin.organizations.delete');
+    
+    // إدارة الإعلانات المحلية
+    Route::get('/admin/local-ads', [AdminController::class, 'localAds'])->name('admin.local-ads');
+    Route::get('/admin/local-ads/{id}/edit', [AdminController::class, 'editLocalAd'])->name('admin.local-ads.edit');
+    Route::put('/admin/local-ads/{id}', [AdminController::class, 'updateLocalAd'])->name('admin.local-ads.update');
+    Route::delete('/admin/local-ads/{id}', [AdminController::class, 'deleteLocalAd'])->name('admin.local-ads.delete');
+    Route::post('/admin/local-ads/{id}/approve', [AdminController::class, 'approveLocalAd'])->name('admin.local-ads.approve');
+    Route::post('/admin/local-ads/{id}/reject', [AdminController::class, 'rejectLocalAd'])->name('admin.local-ads.reject');
+    
+    // إدارة فرص التطوع
+    Route::get('/admin/job-offers', [AdminController::class, 'jobOffers'])->name('admin.job-offers');
+    Route::get('/admin/job-offers/{id}/edit', [AdminController::class, 'editJobOffer'])->name('admin.job-offers.edit');
+    Route::put('/admin/job-offers/{id}', [AdminController::class, 'updateJobOffer'])->name('admin.job-offers.update');
+    Route::delete('/admin/job-offers/{id}', [AdminController::class, 'deleteJobOffer'])->name('admin.job-offers.delete');
+    
+    // إدارة نشرات الأخبار
+    Route::get('/admin/newsletters', [NewsletterController::class, 'index'])->name('admin.newsletters.index');
+    Route::delete('/admin/newsletters/{id}', [NewsletterController::class, 'destroy'])->name('admin.newsletters.destroy');
 });
 
 require __DIR__.'/auth.php';
