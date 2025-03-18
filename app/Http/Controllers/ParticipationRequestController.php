@@ -41,13 +41,17 @@ class ParticipationRequestController extends Controller
             return view('participation-requests.index', compact('requests'));
         }
         
-        // الحصول على معرفات فرص التطوع التابعة لتلك المنظمات
+        // الحصول على معرفات فرص التطوع التي أنشأها المستخدم الحالي فقط
         $jobOfferIds = JobOffer::whereIn('organization_id', $organizationIds)
+            ->where('created_by', Auth::id())
             ->pluck('id')
             ->toArray();
         
-        // الحصول على طلبات المشاركة المرتبطة بتلك الفرص
-        $requests = ParticipationRequest::whereIn('job_offer_id', $jobOfferIds)
+        // الحصول على طلبات المشاركة التي قدمها المستخدم أو المتعلقة بفرص التطوع التي أنشأها
+        $requests = ParticipationRequest::where(function($query) use ($jobOfferIds) {
+                $query->whereIn('job_offer_id', $jobOfferIds) // طلبات لفرص تطوع أنشأها المستخدم
+                      ->orWhere('user_id', Auth::id()); // أو طلبات قدمها المستخدم نفسه
+            })
             ->with(['user', 'jobOffer', 'jobOffer.organization'])
             ->orderBy('request_date', 'desc')
             ->paginate(15);

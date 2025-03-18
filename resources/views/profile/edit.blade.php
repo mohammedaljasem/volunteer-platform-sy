@@ -48,7 +48,7 @@
                                     </button>
                                 </li>
                             </ul>
-                        </div>
+            </div>
 
                         <!-- Tab Content -->
                         <div>
@@ -59,7 +59,7 @@
                                 @include('profile.partials.update-password-form')
                             </div>
                             <div x-show="activeTab === 'danger-zone'">
-                                @include('profile.partials.delete-user-form')
+                    @include('profile.partials.delete-user-form')
                             </div>
                         </div>
                     </div>

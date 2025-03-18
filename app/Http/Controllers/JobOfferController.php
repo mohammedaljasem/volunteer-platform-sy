@@ -21,9 +21,30 @@ class JobOfferController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $jobOffers = JobOffer::with('organization')->latest()->paginate(10);
+        $query = JobOffer::with('organization');
+        
+        // تطبيق فلتر البحث
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('requirements', 'like', '%' . $searchTerm . '%')
+                  ->orWhereHas('organization', function($q) use ($searchTerm) {
+                      $q->where('name', 'like', '%' . $searchTerm . '%');
+                  });
+            });
+        }
+        
+        // تطبيق فلتر التصنيف
+        if ($request->has('category') && !empty($request->category)) {
+            $query->where('category', $request->category);
+        }
+        
+        $jobOffers = $query->latest()->paginate(10)->withQueryString();
+        
         return view('job-offers.index', compact('jobOffers'));
     }
 
@@ -49,20 +70,26 @@ class JobOfferController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'requirements' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'organization_id' => 'required|exists:organizations,id',
             'city_id' => 'nullable|exists:cities,id',
-            'location_id' => 'nullable|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'deadline' => 'required|date|after:today',
             'start_date' => 'nullable|date',
+            'status' => 'nullable|in:متاحة,مغلقة,قادمة',
         ]);
         
+        // معالجة الصورة إذا تم تقديمها
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('job_offers', 'public');
-            $validatedData['image'] = $path;
+            $validatedData['image'] = $request->file('image')->store('job_offers', 'public');
         }
         
-        $validatedData['status'] = 'متاحة';
+        // تعيين الحالة الافتراضية
+        if (!isset($validatedData['status'])) {
+            $validatedData['status'] = 'متاحة';
+        }
+        
+        // تعيين صاحب الحملة (منشئ فرصة التطوع)
+        $validatedData['created_by'] = Auth::id();
         
         $jobOffer = JobOffer::create($validatedData);
         

@@ -72,10 +72,11 @@
                         </div>
                     </div>
                     
-                    @can('update', $participationRequest)
-                        @if($participationRequest->status == 'معلق')
-                            <div class="mt-8 border-t pt-6">
-                                <h3 class="text-lg font-semibold mb-4">{{ __('تحديث حالة الطلب') }}</h3>
+                    @if($participationRequest->status == 'معلق')
+                        <div class="mt-8 border-t pt-6">
+                            <h3 class="text-lg font-semibold mb-4">{{ __('تحديث حالة الطلب') }}</h3>
+                            
+                            @can('update', $participationRequest)
                                 <div class="flex space-x-4">
                                     <form action="{{ route('participation-requests.update-status', $participationRequest) }}" method="POST">
                                         @csrf
@@ -93,9 +94,11 @@
                                         </button>
                                     </form>
                                 </div>
-                            </div>
-                        @endif
-                    @endcan
+                            @else
+                                <p class="text-gray-500">{{ __('فقط صاحب الفرصة التطوعية يمكنه قبول أو رفض هذا الطلب') }}</p>
+                            @endcan
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

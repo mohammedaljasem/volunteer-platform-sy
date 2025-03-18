@@ -112,6 +112,15 @@ class Ad extends Model
     }
 
     /**
+     * علاقة الحملة التطوعية بالمنظمة
+     * Ad belongs to Organization relationship
+     */
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    /**
      * حساب نسبة الإنجاز للحملة التطوعية
      * Calculate the progress percentage of the campaign
      */

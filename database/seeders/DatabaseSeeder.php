@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use App\Models\JobOffer;
 use App\Models\City;
 use App\Models\Organization;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -82,6 +83,22 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->seedJobOffers();
+
+        // إضافة سجلات لجدول ad_participants للاختبار
+        DB::table('ad_participants')->insert([
+            [
+                'user_id' => 1, // تأكد من تعديل هذه القيمة إلى معرف مستخدم حقيقي في نظامك
+                'ad_id' => 1,   // تأكد من تعديل هذه القيمة إلى معرف حملة حقيقية في نظامك
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 1,
+                'ad_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
     }
 
     /**

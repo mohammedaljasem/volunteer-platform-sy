@@ -63,4 +63,13 @@ class Organization extends Model
     {
         return $this->hasOne(Location::class);
     }
+
+    /**
+     * علاقة المنظمة بالحملات التطوعية
+     * Organization has many Ads relationship
+     */
+    public function ads(): HasMany
+    {
+        return $this->hasMany(Ad::class, 'company_id');
+    }
 }

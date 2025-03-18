@@ -56,4 +56,52 @@ class MapController extends Controller
         // إرجاع المواقع التجريبية كـ JSON
         return response()->json($testLocations);
     }
+
+    /**
+     * عرض صفحة المواقع المضافة سابقاً
+     */
+    public function savedLocations()
+    {
+        // جلب معلومات المواقع المضافة سابقاً
+        $locations = $this->getSavedLocations();
+        
+        return view('map.saved', compact('locations'));
+    }
+    
+    /**
+     * جلب بيانات المواقع المضافة سابقاً
+     */
+    private function getSavedLocations()
+    {
+        // جلب مواقع الإعلانات
+        $adLocations = DB::table('ads')
+            ->join('locations', 'ads.location_id', '=', 'locations.id')
+            ->select(
+                'ads.id', 
+                'ads.title', 
+                'ads.description',
+                'locations.latitude as lat', 
+                'locations.longitude as lng', 
+                DB::raw("'ad' as type")
+            )
+            ->get();
+        
+        // جلب مواقع المنظمات
+        $orgLocations = DB::table('organizations')
+            ->join('locations', 'organizations.location_id', '=', 'locations.id')
+            ->select(
+                'organizations.id', 
+                'organizations.name as title', 
+                'organizations.description',
+                'locations.latitude as lat', 
+                'locations.longitude as lng', 
+                DB::raw("'organization' as type")
+            )
+            ->get();
+        
+        // دمج مجموعتي البيانات
+        $allLocations = $adLocations->concat($orgLocations);
+        
+        return $allLocations;
+    }
 }

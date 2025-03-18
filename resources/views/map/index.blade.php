@@ -9,6 +9,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h2 class="text-xl font-semibold">{{ __('خريطة تفاعلية') }}</h2>
+                        <a href="{{ route('map.saved') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+                            {{ __('المواقع المضافة') }}
+                        </a>
+                    </div>
                     <div id="map" style="height: 500px;"></div>
                 </div>
             </div>

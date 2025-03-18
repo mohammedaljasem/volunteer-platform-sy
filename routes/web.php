@@ -19,6 +19,7 @@ Route::get('/', [WelcomeController::class, 'index']);
 
 // مسارات متاحة للجميع
 Route::get('/map', [MapController::class, 'index'])->name('map');
+Route::get('/map/saved', [MapController::class, 'savedLocations'])->name('map.saved');
 Route::get('/api/locations', [MapController::class, 'getLocations'])->name('api.locations');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -30,6 +31,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/debug', [ProfileController::class, 'debug'])->name('profile.debug');
+    
+    // مسارات النشاطات والأحداث
+    Route::get('/activities', [App\Http\Controllers\ActivityController::class, 'index'])->name('activities.index');
+    Route::get('/events', [App\Http\Controllers\EventController::class, 'index'])->name('events.index');
     
     // مسارات الحملات التطوعية
     Route::get('/ads', [AdController::class, 'index'])->name('ads.index');

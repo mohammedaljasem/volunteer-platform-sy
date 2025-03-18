@@ -25,9 +25,34 @@ class AdController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $ads = Ad::with('company')->latest()->paginate(10);
+        $query = Ad::with('company');
+        
+        // تطبيق فلتر البحث
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'like', '%' . $searchTerm . '%')
+                  ->orWhereHas('company', function($q) use ($searchTerm) {
+                      $q->where('name', 'like', '%' . $searchTerm . '%');
+                  });
+            });
+        }
+        
+        // تطبيق فلتر التصنيف
+        if ($request->has('category') && !empty($request->category)) {
+            $query->where('category', $request->category);
+        }
+        
+        // تطبيق فلتر الحالة
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+        
+        $ads = $query->latest()->paginate(10)->withQueryString();
+        
         return view('ads.index', compact('ads'));
     }
 

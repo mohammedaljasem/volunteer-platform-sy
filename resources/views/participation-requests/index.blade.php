@@ -23,7 +23,7 @@
                     @endif
                     
                     <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-4">{{ __('إدارة طلبات المشاركة') }}</h3>
+                        <h3 class="text-lg font-semibold mb-4">{{ __('إدارة طلبات المشاركة الخاصة بك') }}</h3>
                         
                         @if($requests->isEmpty())
                             <div class="text-center py-8">

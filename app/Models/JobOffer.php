@@ -22,6 +22,7 @@ class JobOffer extends Model
         'requirements',
         'image',
         'organization_id',
+        'created_by',
         'status',
         'location_id',
         'city_id',

@@ -178,4 +178,14 @@ class User extends Authenticatable
         
         return $wallet;
     }
+
+    /**
+     * علاقة المستخدم بالحملات التي شارك فيها
+     * User participated in Ads relationship
+     */
+    public function participatedAds(): BelongsToMany
+    {
+        return $this->belongsToMany(Ad::class, 'ad_participants')
+            ->withTimestamps();
+    }
 }

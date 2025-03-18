@@ -10,17 +10,35 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">قائمة الحملات التطوعية</h3>
-                        
-                        @can('create-campaign')
-                        <a href="{{ route('ads.create') }}" class="btn-primary flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                            </svg>
-                            إنشاء حملة جديدة
-                        </a>
-                        @endcan
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            @if(request('search') || request('category') || request('status'))
+                                الحملات التطوعية 
+                                @if(request('search'))
+                                    <span class="text-primary">التي تطابق "{{ request('search') }}"</span>
+                                @endif
+                                @if(request('category'))
+                                    <span class="text-gray-600 text-base"> في {{ __('categories.' . request('category')) }}</span>
+                                @endif
+                                @if(request('status'))
+                                    <span class="text-gray-600 text-base"> ({{ __('statuses.' . request('status')) }})</span>
+                                @endif
+                            @else
+                                قائمة الحملات التطوعية
+                            @endif
+                        </h3>
+                        @if(request('search') || request('category') || request('status'))
+                        <span class="text-sm text-gray-500">{{ $ads->total() }} نتيجة</span>
+                        @endif
                     </div>
+
+                    @can('create-campaign')
+                    <a href="{{ route('ads.create') }}" class="btn-primary flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        إنشاء حملة جديدة
+                    </a>
+                    @endcan
 
                     @if (session('success'))
                         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -31,13 +49,22 @@
                     <!-- فلتر البحث والتصنيف -->
                     <div class="bg-gray-50 dark:bg-gray-700 p-4 mb-6 rounded-lg">
                         <form action="{{ route('ads.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
+                            <div class="md:col-span-2">
                                 <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">بحث</label>
-                                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="أدخل كلمة للبحث..." class="form-input">
+                                <div class="relative">
+                                    <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="أدخل كلمة للبحث..." class="form-input pr-10 w-full">
+                                    @if(request('search'))
+                                    <button type="button" onclick="clearSearch()" class="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    @endif
+                                </div>
                             </div>
                             <div>
                                 <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">التصنيف</label>
-                                <select name="category" id="category" class="form-input">
+                                <select name="category" id="category" class="form-input w-full">
                                     <option value="">جميع التصنيفات</option>
                                     <option value="education" {{ request('category') == 'education' ? 'selected' : '' }}>تعليم</option>
                                     <option value="health" {{ request('category') == 'health' ? 'selected' : '' }}>صحة</option>
@@ -46,15 +73,18 @@
                             </div>
                             <div>
                                 <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الحالة</label>
-                                <select name="status" id="status" class="form-input">
+                                <select name="status" id="status" class="form-input w-full">
                                     <option value="">جميع الحالات</option>
                                     <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشطة</option>
                                     <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>مكتملة</option>
                                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>معلقة</option>
                                 </select>
                             </div>
-                            <div class="flex items-end">
-                                <button type="submit" class="btn-primary w-full">تطبيق الفلتر</button>
+                            <div class="flex items-end space-x-2 space-x-reverse">
+                                <button type="submit" class="btn-primary flex-1">تطبيق الفلتر</button>
+                                @if(request('search') || request('category') || request('status'))
+                                <a href="{{ route('ads.index') }}" class="btn-secondary flex-1 text-center">إعادة تعيين</a>
+                                @endif
                             </div>
                         </form>
                     </div>
@@ -132,4 +162,34 @@
             </div>
         </div>
     </div>
+    
+    @push('scripts')
+    <script>
+        function clearSearch() {
+            const searchInput = document.getElementById('search');
+            searchInput.value = '';
+            
+            // Preserve other filters if they exist
+            const categoryValue = document.getElementById('category').value;
+            const statusValue = document.getElementById('status').value;
+            
+            let url = "{{ route('ads.index') }}";
+            let params = [];
+            
+            if (categoryValue) {
+                params.push(`category=${categoryValue}`);
+            }
+            
+            if (statusValue) {
+                params.push(`status=${statusValue}`);
+            }
+            
+            if (params.length > 0) {
+                url += "?" + params.join("&");
+            }
+            
+            window.location.href = url;
+        }
+    </script>
+    @endpush
 </x-app-layout> 

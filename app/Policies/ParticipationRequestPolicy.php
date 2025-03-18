@@ -59,20 +59,15 @@ class ParticipationRequestPolicy
      */
     public function update(User $user, ParticipationRequest $participationRequest): bool
     {
-        // المستخدم يمكنه تحديث طلباته الخاصة فقط إذا كانت معلقة
-        if ($participationRequest->user_id === $user->id && $participationRequest->status === 'معلق') {
-            return true;
-        }
-        
-        // مدراء المنظمات يمكنهم تحديث طلبات المشاركة في فرص التطوع التي تنتمي لمنظماتهم
+        // فقط صاحب الحملة (منشئ فرصة التطوع) يمكنه تحديث طلبات المشاركة
         $jobOffer = $participationRequest->jobOffer;
         if ($jobOffer) {
             $organizationId = $jobOffer->organization_id;
             
-            // التحقق مما إذا كان المستخدم مرتبطًا بهذه المنظمة
-            return DB::table('organization_user')
-                ->where('user_id', $user->id)
-                ->where('organization_id', $organizationId)
+            // التحقق مما إذا كان المستخدم هو منشئ فرصة التطوع (صاحب الحملة)
+            return DB::table('job_offers')
+                ->where('id', $jobOffer->id)
+                ->where('created_by', $user->id)
                 ->exists();
         }
         
