@@ -399,13 +399,23 @@ class AdminController extends Controller
      */
     public function jobOffers()
     {
-        $jobOffers = JobOffer::with(['user', 'organization'])->latest()->paginate(10);
+        $jobOffers = JobOffer::with('organization')->latest()->paginate(10);
         return view('admin.job-offers.index', compact('jobOffers'));
     }
 
     /**
+     * عرض فرصة تطوع واحدة
+     * Show a single job offer
+     */
+    public function showJobOffer($id)
+    {
+        $jobOffer = JobOffer::with('organization')->findOrFail($id);
+        return view('admin.job-offers.show', compact('jobOffer'));
+    }
+    
+    /**
      * عرض نموذج تعديل فرصة تطوع
-     * Edit job offer form
+     * Show edit job offer form
      */
     public function editJobOffer($id)
     {

@@ -73,7 +73,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div class="flex space-x-2 space-x-reverse">
-                                                <a href="{{ route('job-offers.show', $jobOffer->id) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">عرض</a>
+                                                <a href="{{ route('admin.job-offers.show', $jobOffer->id) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">عرض</a>
                                                 <a href="{{ route('admin.job-offers.edit', $jobOffer->id) }}" class="text-blue-600 hover:text-blue-900 ml-2">تعديل</a>
                                                 <form action="{{ route('admin.job-offers.delete', $jobOffer->id) }}" method="POST" class="inline">
                                                     @csrf

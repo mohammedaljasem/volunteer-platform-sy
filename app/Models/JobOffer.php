@@ -52,8 +52,8 @@ class JobOffer extends Model
             return 'https://via.placeholder.com/350x200/3949ab/FFFFFF?text=فرصة+تطوع';
         }
         
-        // التحقق مما إذا كان المسار يبدأ بـ "job_offers/" وهو مخزن في Storage
-        if (strpos($this->image, 'job_offers/') === 0) {
+        // التحقق مما إذا كان المسار يبدأ بـ "job-offers/" وهو مخزن في Storage
+        if (strpos($this->image, 'job-offers/') === 0 || strpos($this->image, 'job_offers/') === 0) {
             return asset('storage/' . $this->image);
         }
         

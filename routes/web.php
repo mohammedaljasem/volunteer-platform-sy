@@ -214,6 +214,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     
     // إدارة فرص التطوع
     Route::get('/admin/job-offers', [AdminController::class, 'jobOffers'])->name('admin.job-offers');
+    Route::get('/admin/job-offers/{id}', [AdminController::class, 'showJobOffer'])->name('admin.job-offers.show');
     Route::get('/admin/job-offers/{id}/edit', [AdminController::class, 'editJobOffer'])->name('admin.job-offers.edit');
     Route::put('/admin/job-offers/{id}', [AdminController::class, 'updateJobOffer'])->name('admin.job-offers.update');
     Route::delete('/admin/job-offers/{id}', [AdminController::class, 'deleteJobOffer'])->name('admin.job-offers.delete');
