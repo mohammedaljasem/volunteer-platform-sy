@@ -17,7 +17,7 @@ use App\Http\Controllers\NewsletterController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('/', [WelcomeController::class, 'index']);
+Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
 // مسارات متاحة للجميع
 Route::get('/map', [MapController::class, 'index'])->name('map');

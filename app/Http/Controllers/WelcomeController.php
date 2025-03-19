@@ -15,17 +15,39 @@ class WelcomeController extends Controller
 {
     public function index()
     {
+        // مسح التخزين المؤقت للإحصائيات لضمان تحديث البيانات
+        Cache::forget('home_stats');
+        
         // استخدام التخزين المؤقت للإحصائيات
         $stats = Cache::remember('home_stats', 3600, function () {
+            // الحصول على إجمالي عدد طلبات المشاركة المقبولة
+            $acceptedRequests = ParticipationRequest::where('status', 'مقبول')->count();
+            
             return [
-                'activeUsersCount' => User::whereHas('roles', function($query) {
+                // عدد المتطوعين النشطين
+                'volunteersCount' => User::whereHas('roles', function($query) {
                     $query->where('name', 'مستخدم');
                 })->count(),
+                
+                // عدد المنظمات المسجلة
+                'organizationsCount' => Organization::count(),
+                
+                // عدد الحملات التطوعية
                 'campaignsCount' => Ad::where('status', 'نشطة')->count(),
+                
+                // إجمالي ساعات التطوع (تقدير بضرب عدد الطلبات المقبولة في 5 ساعات افتراضية)
+                'volunteerHours' => $acceptedRequests * 5, // افتراض أن كل مشاركة تستغرق 5 ساعات
+                
+                // إحصائيات إضافية
                 'totalDonations' => Ad::sum('current_amount'),
+                'pendingRequests' => ParticipationRequest::where('status', 'معلق')->count(),
                 'citiesCount' => DB::table('cities')->count(),
             ];
         });
+
+        // مسح التخزين المؤقت للحملات وفرص العمل
+        Cache::forget('featured_campaigns');
+        Cache::forget('latest_job_offers');
 
         // جلب 3 حملات مميزة مع eager loading للعلاقات
         $featuredCampaigns = Cache::remember('featured_campaigns', 1800, function () {
@@ -44,6 +66,19 @@ class WelcomeController extends Controller
                 ->take(2)
                 ->get();
         });
+
+        // التأكد من أن جميع المتغيرات موجودة قبل عرض الصفحة
+        if (!isset($stats) || !is_array($stats)) {
+            $stats = [
+                'volunteersCount' => 0,
+                'organizationsCount' => 0,
+                'campaignsCount' => 0,
+                'volunteerHours' => 0,
+                'totalDonations' => 0,
+                'pendingRequests' => 0,
+                'citiesCount' => 0
+            ];
+        }
 
         return view('welcome', compact(
             'stats', 

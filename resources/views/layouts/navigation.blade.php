@@ -5,8 +5,8 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center">
-                        <img src="{{ asset('images/default-avatar.svg') }}" alt="منصة التطوع" class="h-10 w-auto">
+                    <a href="{{ route('welcome') }}" class="flex items-center">
+                        <img src="{{ asset('images/logo/volunteer-logo.png') }}" alt="منصة التطوع" class="h-10 w-auto">
                         <span class="mr-2 text-xl font-bold text-green-600 dark:text-green-400">منصة التطوع</span>
                     </a>
                 </div>
