@@ -107,6 +107,12 @@ Route::middleware('auth')->group(function () {
     
     // مسارات الإعلانات المحلية
     Route::resource('local-ads', App\Http\Controllers\LocalAdController::class);
+
+    // Notification Routes
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/data', [App\Http\Controllers\NotificationController::class, 'getNotifications'])->name('notifications.data');
+    Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
 });
 
 // مسارات المشرف - إدارة النشرة البريدية
@@ -196,6 +202,25 @@ Route::get('/storage-diagnostic', function () {
         'public_disk_url' => config('filesystems.disks.public.url'),
         'app_url' => config('app.url'),
     ]);
+});
+
+// Test notification route
+Route::middleware('auth')->get('/test-notification', function() {
+    $user = auth()->user();
+    
+    // Create a test Laravel notification
+    $user->notify(new \App\Notifications\TestNotification());
+    
+    // Create a test custom notification
+    \App\Models\Notification::create([
+        'user_id' => $user->id,
+        'message' => 'This is a test custom notification',
+        'type' => 'info',
+        'date' => now(),
+        'is_read' => false
+    ]);
+    
+    return redirect()->back()->with('success', 'Test notifications created!');
 });
 
 require __DIR__.'/auth.php';

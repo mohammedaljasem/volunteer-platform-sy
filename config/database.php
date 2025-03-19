@@ -121,13 +121,23 @@ return [
     |
     | This table keeps track of all the migrations that have already run for
     | your application. Using this information, we can determine which of
-    | the migrations on disk haven't actually been run on the database.
+    | the migrations on disk haven't actually been run in the database.
     |
     */
 
-    'migrations' => [
-        'table' => 'migrations',
-        'update_date_on_publish' => true,
+    'migrations' => 'migrations',
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications Table
+    |--------------------------------------------------------------------------
+    |
+    | This is the table used by Laravel to store database notifications.
+    |
+    */
+    
+    'notifications' => [
+        'table' => 'laravel_notifications',
     ],
 
     /*
@@ -148,7 +158,6 @@ return [
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
-            'persistent' => env('REDIS_PERSISTENT', false),
         ],
 
         'default' => [

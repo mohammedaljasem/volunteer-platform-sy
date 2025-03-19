@@ -124,6 +124,17 @@ return [
     ],
 
     /*
+    |--------------------------------------------------------------------------
+    | Notifications Table Name
+    |--------------------------------------------------------------------------
+    |
+    | This value defines the table name for Laravel's notifications.
+    |
+    */
+
+    'notifications_table' => 'laravel_notifications',
+
+    /*
      * Package Service Providers...
      */
 
@@ -136,5 +147,6 @@ return [
     App\Providers\EventServiceProvider::class,
     App\Providers\RouteServiceProvider::class,
     App\Providers\PermissionServiceProvider::class,
+    App\Providers\CustomNotificationServiceProvider::class,
 
 ];

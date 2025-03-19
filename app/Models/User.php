@@ -10,11 +10,26 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\LaravelNotification;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
+
+    /**
+     * The table used by Laravel for notifications.
+     *
+     * @var string
+     */
+    protected $notificationsTableName = 'laravel_notifications';
+
+    /**
+     * The notification class to use for database notifications.
+     *
+     * @var string
+     */
+    protected $notificationClass = \App\Models\LaravelNotification::class;
 
     /**
      * The attributes that are mass assignable.
@@ -186,5 +201,17 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Ad::class, 'ad_participants')
             ->withTimestamps();
+    }
+
+    /**
+     * Route notifications for the database channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return array|\Illuminate\Database\Eloquent\Model
+     */
+    public function routeNotificationForDatabase($notification)
+    {
+        // This is how Laravel normally routes database notifications
+        return LaravelNotification::query();
     }
 }

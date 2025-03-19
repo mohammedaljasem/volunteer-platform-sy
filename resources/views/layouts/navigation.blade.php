@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('welcome') }}" class="flex items-center">
-                        <img src="{{ asset('images/logo/volunteer-logo.png') }}" alt="منصة التطوع" class="h-10 w-auto">
+                        <img src="{{ asset('images/logo/logo.jpeg') }}" alt="منصة التطوع" class="h-10 w-auto">
                         <span class="mr-2 text-xl font-bold text-green-600 dark:text-green-400">منصة التطوع</span>
                     </a>
                 </div>
@@ -32,73 +32,68 @@
             <div class="hidden sm:flex sm:items-center sm:mr-6">
                 <!-- Notifications -->
                 <div class="mr-3 relative">
-                    <x-dropdown align="left" width="80">
+                    <x-dropdown align="left" width="80" name="notifications">
                         <x-slot name="trigger">
                             <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                                 <div class="relative">
                                     <i class="fas fa-bell text-xl"></i>
-                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                                    @php
+                                        $unreadCount = 0;
+                                        try {
+                                            // Get unread Laravel notifications
+                                            $unreadCount = auth()->user()->unreadNotifications()->count();
+                                        } catch (\Exception $e) {
+                                            // If there's an error, just use custom notifications
+                                        }
+                                        
+                                        // Add custom notifications
+                                        try {
+                                            $unreadCount += auth()->user()->customNotifications()->where('is_read', false)->count();
+                                        } catch (\Exception $e) {
+                                            // If there's an error, just continue
+                                        }
+                                    @endphp
+                                    <span id="notification-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center" style="{{ $unreadCount > 0 ? '' : 'display: none;' }}">
+                                        {{ $unreadCount }}
+                                    </span>
                                 </div>
                             </button>
                         </x-slot>
 
                         <x-slot name="content">
-                            <div class="max-h-96 overflow-y-auto">
-                                <div class="block px-4 py-2 text-xs text-gray-400">
-                                    {{ __('الإشعارات') }}
+                            <div id="notifications-container" class="max-h-96 overflow-y-auto" style="min-width: 320px;">
+                                <div class="px-4 py-3 flex justify-between items-center bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-600">
+                                    <span class="font-medium text-gray-700 dark:text-gray-300">{{ __('الإشعارات') }}</span>
+                                    <button id="mark-all-read-dropdown" class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium" title="تعليم الكل كمقروء">
+                                        <i class="fas fa-check-double ml-1"></i> تعليم الكل كمقروء
+                                    </button>
+                                </div>
+
+                                <!-- Notification Filters -->
+                                <div class="flex px-2 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-600 overflow-x-auto">
+                                    <button data-filter="all" class="notification-filter px-3 py-1 text-xs rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-700 dark:text-indigo-100 font-medium ml-1">الكل</button>
+                                    <button data-filter="unread" class="notification-filter px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 font-medium hover:bg-indigo-100 hover:text-indigo-800 dark:hover:bg-indigo-700 dark:hover:text-indigo-100 ml-1">غير مقروء</button>
+                                    <button data-filter="today" class="notification-filter px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 font-medium hover:bg-indigo-100 hover:text-indigo-800 dark:hover:bg-indigo-700 dark:hover:text-indigo-100">اليوم</button>
+                                </div>
+
+                                <!-- Notification Loading -->
+                                <div id="notifications-loading" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-spinner fa-spin ml-1"></i> جاري تحميل الإشعارات...
+                                </div>
+
+                                <!-- Notification Groups - Will be populated by JS -->
+                                <div id="notification-groups" class="divide-y divide-gray-200 dark:divide-gray-600 hidden">
+                                    <!-- Content will be dynamically added here -->
+                                </div>
+
+                                <!-- No Notifications Message -->
+                                <div id="no-notifications" class="p-4 text-center text-gray-500 dark:text-gray-400 hidden">
+                                    <p>لا توجد إشعارات</p>
                                 </div>
 
                                 <div class="border-t border-gray-200 dark:border-gray-600"></div>
 
-                                <!-- Notification Items -->
-                                <div class="divide-y divide-gray-200 dark:divide-gray-600">
-                                    <a href="#" class="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out">
-                                        <div class="flex">
-                                            <div class="flex-shrink-0 ml-3">
-                                                <div class="h-10 w-10 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center">
-                                                    <i class="fas fa-check text-green-600 dark:text-green-300"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-1">
-                                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">تمت الموافقة على طلب المشاركة</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">تمت الموافقة على طلب المشاركة في فرصة تنظيف الشاطئ</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">منذ ساعة واحدة</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out">
-                                        <div class="flex">
-                                            <div class="flex-shrink-0 ml-3">
-                                                <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center">
-                                                    <i class="fas fa-donate text-blue-600 dark:text-blue-300"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-1">
-                                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">تم استلام تبرع جديد</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">تم استلام تبرع بقيمة 5,000 ل.س للحملة التعليمية</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">منذ 3 ساعات</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out">
-                                        <div class="flex">
-                                            <div class="flex-shrink-0 ml-3">
-                                                <div class="h-10 w-10 rounded-full bg-yellow-100 dark:bg-yellow-800 flex items-center justify-center">
-                                                    <i class="fas fa-medal text-yellow-600 dark:text-yellow-300"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-1">
-                                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">لقد حصلت على شارة جديدة</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">تهانينا! لقد حصلت على شارة متطوع متميز</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">منذ يومين</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-
-                                <div class="border-t border-gray-200 dark:border-gray-600"></div>
-
-                                <a href="#" class="block text-center px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out">
+                                <a href="{{ route('notifications.index') }}" class="block text-center px-4 py-2 font-medium text-sm text-indigo-600 dark:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-150 ease-in-out">
                                     عرض كل الإشعارات
                                 </a>
                             </div>
@@ -184,9 +179,27 @@
             <x-responsive-nav-link :href="route('activities.index')" :active="request()->routeIs('activities.*')" class="dark:text-gray-300 dark:hover:text-white">
                 <i class="fas fa-chart-line ml-1"></i> {{ __('نشاطاتي') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="#" class="dark:text-gray-300 dark:hover:text-white">
-                <i class="fas fa-bell ml-1"></i> {{ __('الإشعارات') }}
-                <span class="bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 mr-1">3</span>
+            <x-responsive-nav-link href="#" class="dark:text-gray-300 dark:hover:text-white flex justify-between items-center">
+                <div>
+                    <i class="fas fa-bell ml-1"></i> {{ __('الإشعارات') }}
+                </div>
+                @php
+                    $mobileUnreadCount = 0;
+                    try {
+                        // Get unread Laravel notifications
+                        $mobileUnreadCount = auth()->user()->unreadNotifications()->count();
+                    } catch (\Exception $e) {
+                        // If there's an error, just use custom notifications
+                    }
+                    
+                    // Add custom notifications
+                    try {
+                        $mobileUnreadCount += auth()->user()->customNotifications()->where('is_read', false)->count();
+                    } catch (\Exception $e) {
+                        // If there's an error, just continue
+                    }
+                @endphp
+                <span class="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ $mobileUnreadCount }}</span>
             </x-responsive-nav-link>
         </div>
 
