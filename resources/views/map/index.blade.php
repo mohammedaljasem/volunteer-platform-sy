@@ -1,17 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('خريطة المواقع') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="mb-4 flex justify-between items-center">
                         <h2 class="text-xl font-semibold">{{ __('خريطة تفاعلية') }}</h2>
-                        <a href="{{ route('map.saved') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+                        <a href="{{ route('map.saved') }}" class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 text-white px-4 py-2 rounded-md transition-colors">
                             {{ __('المواقع المضافة') }}
                         </a>
                     </div>
@@ -58,6 +58,16 @@
         .marker-cluster span {
             line-height: 30px;
         }
+        
+        /* تنسيقات الوضع الداكن للخريطة */
+        @media (prefers-color-scheme: dark) {
+            .leaflet-tile {
+                filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7) !important;
+            }
+            .leaflet-container {
+                background: #303030 !important;
+            }
+        }
     </style>
     @endpush
 
@@ -94,73 +104,81 @@
                     console.log('عدد المواقع:', data.length);
                     
                     if (data.length === 0) {
-                        document.getElementById('map').innerHTML += '<div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert"><p>لا توجد مواقع لعرضها على الخريطة</p></div>';
+                        document.getElementById('map').innerHTML += '<div class="bg-yellow-100 dark:bg-yellow-800/30 border-l-4 border-yellow-500 dark:border-yellow-600 text-yellow-700 dark:text-yellow-300 p-4" role="alert"><p>لا توجد مواقع لعرضها على الخريطة</p></div>';
                     }
                     
                     data.forEach((location, index) => {
                         console.log(`معالجة الموقع ${index}:`, location);
-                        let marker;
-                        let popupContent = '';
                         
-                        // تخصيص المحتوى حسب نوع الموقع
-                        if (location.type === 'ad') {
-                            // أيقونة للحملات التطوعية
-                            const adIcon = L.divIcon({
-                                html: `<div style="background-color: #4CAF50; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;"><i class="fas fa-hand-holding-heart"></i></div>`,
-                                className: 'custom-div-icon',
-                                iconSize: [30, 30],
-                                iconAnchor: [15, 15]
-                            });
-                            
-                            marker = L.marker([location.lat, location.lng], { icon: adIcon });
-                            console.log(`تم إضافة علامة إعلان في الموقع: [${location.lat}, ${location.lng}]`);
-                            
-                            // محتوى النافذة المنبثقة للحملات التطوعية
-                            popupContent = `
-                                <div>
-                                    <h3 class="font-bold text-lg">${location.title}</h3>
-                                    <p>${location.description}</p>
-                                    <a href="/ads/${location.id}" class="mt-2 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">عرض التفاصيل</a>
-                                </div>
-                            `;
-                        } else if (location.type === 'organization') {
-                            // أيقونة للمنظمات
-                            const orgIcon = L.divIcon({
-                                html: `<div style="background-color: #2196F3; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;"><i class="fas fa-building"></i></div>`,
-                                className: 'custom-div-icon',
-                                iconSize: [30, 30],
-                                iconAnchor: [15, 15]
-                            });
-                            
-                            marker = L.marker([location.lat, location.lng], { icon: orgIcon });
-                            console.log(`تم إضافة علامة منظمة في الموقع: [${location.lat}, ${location.lng}]`);
-                            
-                            // محتوى النافذة المنبثقة للمنظمات
-                            popupContent = `
-                                <div>
-                                    <h3 class="font-bold text-lg">${location.title}</h3>
-                                    <p>${location.description}</p>
-                                    <a href="/organizations/${location.id}" class="mt-2 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">عرض التفاصيل</a>
-                                </div>
-                            `;
+                        // تحقق من صحة الإحداثيات
+                        if (!location.latitude || !location.longitude) {
+                            console.warn(`تم تخطي الموقع ${index} لعدم وجود إحداثيات صالحة:`, location);
+                            return;
                         }
                         
+                        // إنشاء علامة
+                        const marker = L.marker([location.latitude, location.longitude]);
+                        
+                        // إضافة نافذة منبثقة
+                        const popupContent = `
+                            <div class="popup-content">
+                                <h3 class="text-lg font-bold mb-1">${location.name || 'موقع بدون اسم'}</h3>
+                                ${location.address ? `<p class="text-sm mb-2">${location.address}</p>` : ''}
+                                ${location.description ? `<p class="text-sm text-gray-600">${location.description}</p>` : ''}
+                                <div class="mt-3">
+                                    <a href="/locations/${location.id}" class="text-blue-500 hover:text-blue-700 text-sm">عرض التفاصيل</a>
+                                </div>
+                            </div>
+                        `;
+                        
                         marker.bindPopup(popupContent);
+                        
+                        // إضافة العلامة إلى المجموعة
                         markers.addLayer(marker);
                     });
                     
+                    // إضافة المجموعة إلى الخريطة
                     map.addLayer(markers);
-                    console.log('تم إضافة كل العلامات إلى الخريطة');
+                    console.log('تمت إضافة العلامات إلى الخريطة');
                 })
                 .catch(error => {
-                    console.error('Error fetching locations:', error);
-                    document.getElementById('map').innerHTML += `
-                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
-                            <p class="font-bold">خطأ</p>
-                            <p>${error.message}</p>
-                        </div>
-                    `;
+                    console.error('حدث خطأ:', error);
+                    document.getElementById('map').innerHTML += `<div class="bg-red-100 dark:bg-red-800/30 border-l-4 border-red-500 dark:border-red-600 text-red-700 dark:text-red-300 p-4" role="alert"><p>حدث خطأ أثناء تحميل بيانات الخريطة: ${error.message}</p></div>`;
                 });
+                
+            // إضافة زر لإضافة موقع جديد
+            const addLocationBtn = L.control({position: 'topleft'});
+            addLocationBtn.onAdd = function() {
+                const button = L.DomUtil.create('button', 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 text-white px-3 py-2 rounded-md shadow-md');
+                button.innerHTML = '<i class="fas fa-plus ml-1"></i> إضافة موقع';
+                button.style.margin = '10px';
+                
+                button.onclick = function() {
+                    window.location.href = '{{ route("locations.create") }}';
+                }
+                
+                return button;
+            }
+            
+            addLocationBtn.addTo(map);
+            
+            // تعديل النمط ليناسب الوضع الداكن
+            const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (isDarkMode) {
+                document.querySelectorAll('.leaflet-tile').forEach(tile => {
+                    tile.style.filter = 'brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7)';
+                });
+            }
+            
+            // استمع للتغييرات في وضع العرض
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                const isDarkMode = e.matches;
+                document.querySelectorAll('.leaflet-tile').forEach(tile => {
+                    tile.style.filter = isDarkMode ? 
+                        'brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7)' : 
+                        '';
+                });
+            });
         });
     </script>
     @endpush

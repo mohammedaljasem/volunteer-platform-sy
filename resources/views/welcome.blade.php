@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,9 +12,89 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* تنسيقات الوضع الفاتح */
+        :root {
+            --bg-color: #fff;
+            --text-color: #333;
+            --card-bg: #fff;
+            --card-border: #e5e7eb;
+            --feature-icon-bg: #f8f9fa;
+            --feature-icon-color: #1a237e;
+            --bg-pattern: #f8f9fa;
+            --heading-color: #212529;
+            --footer-bg: #343a40;
+            --footer-text: rgba(255,255,255,0.8);
+            --footer-link: rgba(255,255,255,0.7);
+            --progress-bg: #e9ecef;
+        }
+        
+        /* تنسيقات الوضع الداكن */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1f2937;
+                --text-color: #e5e7eb;
+                --card-bg: #111827;
+                --card-border: #374151;
+                --feature-icon-bg: #374151;
+                --feature-icon-color: #818cf8;
+                --bg-pattern: #111827;
+                --heading-color: #f3f4f6;
+                --footer-bg: #111827;
+                --footer-text: rgba(229,231,235,0.8);
+                --footer-link: rgba(229,231,235,0.7);
+                --progress-bg: #4b5563;
+            }
+            
+            body {
+                background-color: var(--bg-color);
+                color: var(--text-color);
+            }
+            
+            .card {
+                background-color: var(--card-bg);
+                border-color: var(--card-border);
+            }
+            
+            .bg-light {
+                background-color: #374151 !important;
+            }
+            
+            .text-dark {
+                color: var(--text-color) !important;
+            }
+            
+            .text-muted {
+                color: #9ca3af !important;
+            }
+            
+            .btn-outline-primary {
+                color: #818cf8;
+                border-color: #818cf8;
+            }
+            
+            .btn-outline-primary:hover {
+                background-color: #818cf8;
+                color: #111827;
+            }
+            
+            .btn-primary {
+                background-color: #4f46e5;
+                border-color: #4f46e5;
+            }
+            
+            .progress-bar {
+                background-color: #4f46e5;
+            }
+        }
+        
         body {
             font-family: 'Cairo', sans-serif;
-            color: #333;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--heading-color);
         }
         
         /* تنسيق القسم الرئيسي (Hero Section) */
@@ -61,6 +141,8 @@
             border-radius: 10px;
             overflow: hidden;
             height: 100%;
+            background-color: var(--card-bg);
+            border-color: var(--card-border);
         }
         
         .feature-card:hover {
@@ -73,12 +155,12 @@
             height: 80px;
             margin: 0 auto 20px;
             border-radius: 50%;
-            background-color: #f8f9fa;
+            background-color: var(--feature-icon-bg);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            color: #1a237e;
+            color: var(--feature-icon-color);
         }
         
         /* تنسيق بطاقات الحملات */
@@ -87,6 +169,8 @@
             border-radius: 10px;
             overflow: hidden;
             height: 100%;
+            background-color: var(--card-bg);
+            border-color: var(--card-border);
         }
         
         .campaign-card:hover {
@@ -102,6 +186,7 @@
         .progress {
             height: 10px;
             border-radius: 5px;
+            background-color: var(--progress-bg);
         }
         
         /* شريط الخدمات */
@@ -119,14 +204,14 @@
         
         /* خلفية الصفحة */
         .bg-pattern {
-            background-color: #f8f9fa;
+            background-color: var(--bg-pattern);
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a237e' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         
         /* تذييل الصفحة */
         footer {
-            background-color: #343a40;
-            color: rgba(255,255,255,0.8);
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
             padding: 3rem 0 1rem;
         }
         
@@ -146,43 +231,67 @@
         }
         
         footer a {
-            color: rgba(255,255,255,0.7);
+            color: var(--footer-link);
             text-decoration: none;
             transition: color 0.2s;
         }
         
         footer a:hover {
             color: white;
-            text-decoration: underline;
+            text-decoration: none;
         }
         
-        /* التنسيقات العامة */
-        .section-title {
-            position: relative;
-            margin-bottom: 2.5rem;
+        /* نموذج الاشتراك */
+        .subscribe-form .form-control {
+            border-top-right-radius: 0.25rem !important;
+            border-bottom-right-radius: 0.25rem !important;
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+            background-color: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .subscribe-form .btn {
+            border-top-left-radius: 0.25rem !important;
+            border-bottom-left-radius: 0.25rem !important;
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+        
+        /* شريط التنقل */
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: var(--card-bg) !important;
+        }
+        
+        .navbar-brand {
             font-weight: 700;
+            color: var(--heading-color) !important;
         }
         
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            width: 50px;
-            height: 3px;
-            background-color: #1a237e;
+        .navbar-nav .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
         }
         
-        .btn-primary {
+        .navbar-nav .nav-item.active .nav-link, 
+        .navbar-nav .nav-link:hover {
+            color: #1a237e;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .navbar-nav .nav-item.active .nav-link, 
+            .navbar-nav .nav-link:hover {
+                color: #818cf8;
+            }
+        }
+        
+        /* أزرار */
+        .btn-primary, .btn-outline-primary:hover {
             background-color: #1a237e;
             border-color: #1a237e;
-        }
-        
-        .btn-primary:hover {
-            background-color: #0d1757;
-            border-color: #0d1757;
         }
         
         .btn-outline-primary {
@@ -190,11 +299,143 @@
             border-color: #1a237e;
         }
         
-        .btn-outline-primary:hover {
-            background-color: #1a237e;
-            border-color: #1a237e;
+        /* السمة العامة للتطبيق */
+        .text-primary {
+            color: #1a237e !important;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .text-primary {
+                color: #818cf8 !important;
+            }
+        }
+        
+        /* تأثيرات التمرير */
+        .reveal {
+            position: relative;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 1s ease;
+        }
+        
+        .reveal.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* الاحتواء السريع */
+        .quick-stats {
+            padding: 3rem 0;
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a237e;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .stat-number {
+                color: #818cf8;
+            }
+        }
+        
+        .stat-text {
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+        
+        /* تنسيقات الاستجابة */
+        @media (max-width: 768px) {
+            .hero-section, .carousel-item {
+                height: auto;
+                min-height: 500px;
+            }
+            
+            .carousel-caption {
+                padding: 0 5%;
+            }
+            
+            .carousel-caption h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+        
+        /* زر العودة لأعلى */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1a237e;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: opacity 0.3s, visibility 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .back-to-top {
+                background: #4f46e5;
+            }
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: #0e1442;
+            color: white;
+        }
+        
+        /* معالجة مشكلة التنقل بين الصفحات في الوضع الداكن */
+        .navbar-light .navbar-brand,
+        .navbar-light .navbar-nav .nav-link {
+            color: var(--text-color);
+        }
+        
+        .navbar-light .navbar-toggler-icon {
+            filter: invert(0);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .navbar-light .navbar-toggler-icon {
+                filter: invert(1);
+            }
         }
     </style>
+    
+    <!-- Dark mode toggle script -->
+    <script>
+        // تحقق من الوضع المحفوظ
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
 </head>
 <body>
     <!-- شريط التنقل -->
