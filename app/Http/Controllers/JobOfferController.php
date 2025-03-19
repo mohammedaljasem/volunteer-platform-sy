@@ -5,17 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\JobOffer;
 use App\Models\Organization;
 use App\Models\ParticipationRequest;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class JobOfferController extends Controller
 {
     /**
+     * خدمة معالجة الصور
+     * 
+     * @var \App\Services\ImageService
+     */
+    protected $imageService;
+
+    /**
      * Create a new controller instance.
      */
-    public function __construct()
+    public function __construct(ImageService $imageService)
     {
         $this->middleware('auth');
+        $this->imageService = $imageService;
     }
 
     /**
@@ -72,7 +82,7 @@ class JobOfferController extends Controller
             'requirements' => 'nullable|string',
             'organization_id' => 'required|exists:organizations,id',
             'city_id' => 'nullable|exists:cities,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'deadline' => 'required|date|after:today',
             'start_date' => 'nullable|date',
             'status' => 'nullable|in:متاحة,مغلقة,قادمة',
@@ -80,7 +90,13 @@ class JobOfferController extends Controller
         
         // معالجة الصورة إذا تم تقديمها
         if ($request->hasFile('image')) {
-            $validatedData['image'] = $request->file('image')->store('job_offers', 'public');
+            $validatedData['image'] = $this->imageService->storeOptimized(
+                $request->file('image'),
+                'job-offers',
+                800, // العرض المطلوب
+                null, // الارتفاع التلقائي
+                85 // جودة الصورة
+            );
         }
         
         // تعيين الحالة الافتراضية
@@ -135,7 +151,7 @@ class JobOfferController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'requirements' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'organization_id' => 'required|exists:organizations,id',
             'city_id' => 'nullable|exists:cities,id',
             'status' => 'required|in:متاحة,مغلقة,قادمة',
@@ -146,12 +162,17 @@ class JobOfferController extends Controller
         
         if ($request->hasFile('image')) {
             // حذف الصورة القديمة إذا وجدت
-            if ($jobOffer->image && strpos($jobOffer->image, 'job_offers/') === 0) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($jobOffer->image);
+            if ($jobOffer->image) {
+                $this->imageService->deleteImage($jobOffer->image);
             }
             
-            $path = $request->file('image')->store('job_offers', 'public');
-            $validatedData['image'] = $path;
+            $validatedData['image'] = $this->imageService->storeOptimized(
+                $request->file('image'),
+                'job-offers',
+                800, // العرض المطلوب
+                null, // الارتفاع التلقائي
+                85 // جودة الصورة
+            );
         }
         
         $jobOffer->update($validatedData);
@@ -166,6 +187,11 @@ class JobOfferController extends Controller
     public function destroy(JobOffer $jobOffer)
     {
         $this->authorize('delete', $jobOffer);
+        
+        // حذف الصورة المرتبطة بفرصة التطوع
+        if ($jobOffer->image) {
+            $this->imageService->deleteImage($jobOffer->image);
+        }
         
         $jobOffer->delete();
         

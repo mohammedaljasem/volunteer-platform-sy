@@ -316,28 +316,28 @@
                 <div class="col-md-3 mb-4">
                     <div class="p-4 bg-white rounded shadow-sm">
                         <i class="fas fa-hands-helping text-primary mb-3 fa-3x"></i>
-                        <h2 class="mb-0 fw-bold text-primary">+{{ $activeUsersCount }}</h2>
+                        <h2 class="mb-0 fw-bold text-primary">{{ $stats['activeUsersCount'] }}</h2>
                         <p class="text-muted">متطوع نشط</p>
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
                     <div class="p-4 bg-white rounded shadow-sm">
-                        <i class="fas fa-project-diagram text-primary mb-3 fa-3x"></i>
-                        <h2 class="mb-0 fw-bold text-primary">+{{ $campaignsCount }}</h2>
+                        <i class="fas fa-bullhorn text-primary mb-3 fa-3x"></i>
+                        <h2 class="mb-0 fw-bold text-primary">{{ $stats['campaignsCount'] }}</h2>
                         <p class="text-muted">حملة تطوعية</p>
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
                     <div class="p-4 bg-white rounded shadow-sm">
                         <i class="fas fa-donate text-primary mb-3 fa-3x"></i>
-                        <h2 class="mb-0 fw-bold text-primary">+{{ number_format($totalDonations) }}</h2>
+                        <h2 class="mb-0 fw-bold text-primary">{{ number_format($stats['totalDonations']) }}</h2>
                         <p class="text-muted">ليرة سورية</p>
                     </div>
                 </div>
                 <div class="col-md-3 mb-4">
                     <div class="p-4 bg-white rounded shadow-sm">
                         <i class="fas fa-map-marked-alt text-primary mb-3 fa-3x"></i>
-                        <h2 class="mb-0 fw-bold text-primary">{{ $citiesCount }}</h2>
+                        <h2 class="mb-0 fw-bold text-primary">{{ $stats['citiesCount'] }}</h2>
                         <p class="text-muted">محافظة</p>
                     </div>
                 </div>

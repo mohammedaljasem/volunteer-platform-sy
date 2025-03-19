@@ -201,53 +201,61 @@
                 <!-- العمود الأيسر: نشاطك و الأحداث القادمة -->
                 <div>
                     <!-- نشاطك الأخير -->
-                    <div class="bg-white overflow-hidden shadow-md rounded-xl mb-6">
-                        <div class="border-b border-gray-200">
-                            <div class="p-5 flex justify-between items-center">
-                                <h3 class="text-lg font-semibold text-gray-900">نشاطك الأخير</h3>
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6">
+                        <div class="p-6 bg-white border-b border-gray-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="font-semibold text-xl text-gray-800 leading-tight">نشاطك الأخير</h2>
+                                <a href="{{ route('activities.index') }}" class="inline-block px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm">
+                                    عرض كل النشاطات
+                                </a>
                             </div>
-                        </div>
-                        <div class="p-5">
-                            <ul class="space-y-4">
-                                <li class="flex items-start space-x-4 space-x-reverse">
-                                    <span class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <p class="text-sm text-gray-700">قمت بالانضمام إلى <a href="#" class="font-medium text-blue-600">فرصة تطوع جديدة</a></p>
-                                        <p class="text-xs text-gray-500 mt-1">منذ ساعتين</p>
+                            <div class="overflow-hidden">
+                                @forelse($recentActivities as $activity)
+                                <div class="py-3 flex items-start">
+                                    <div class="flex-shrink-0 bg-{{ $activity['color'] }}-100 rounded-full p-2">
+                                        @if($activity['icon'] == 'add')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-{{ $activity['color'] }}-600" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                                            </svg>
+                                        @elseif($activity['icon'] == 'money')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-{{ $activity['color'] }}-600" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
+                                            </svg>
+                                        @elseif($activity['icon'] == 'badge')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-{{ $activity['color'] }}-600" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                        @else
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-{{ $activity['color'] }}-600" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                        @endif
                                     </div>
-                                </li>
-                                <li class="flex items-start space-x-4 space-x-reverse">
-                                    <span class="flex-shrink-0 h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <p class="text-sm text-gray-700">تبرعت بمبلغ <span class="font-medium">20,000 ل.س</span> لحملة <a href="#" class="font-medium text-blue-600">بناء مركز تعليمي</a></p>
-                                        <p class="text-xs text-gray-500 mt-1">منذ يومين</p>
+                                    <div class="mr-4 flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <h3 class="text-md font-medium">{{ $activity['title'] }}</h3>
+                                            <span class="text-sm text-gray-500">{{ $activity['date']->diffForHumans() }}</span>
+                                        </div>
+                                        <p class="mt-1 text-sm text-gray-600">
+                                            {{ $activity['subtitle'] ?? '' }}
+                                        </p>
+                                        <div class="mt-2">
+                                            <a href="{{ $activity['link'] }}" class="text-sm text-{{ $activity['color'] }}-600 hover:text-{{ $activity['color'] }}-800">عرض التفاصيل</a>
+                                        </div>
                                     </div>
-                                </li>
-                                <li class="flex items-start space-x-4 space-x-reverse">
-                                    <span class="flex-shrink-0 h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-600" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <p class="text-sm text-gray-700">حصلت على شارة <span class="font-medium">متطوع متميز</span></p>
-                                        <p class="text-xs text-gray-500 mt-1">منذ أسبوع</p>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="mt-4 text-center">
-                                <a href="{{ route('activities.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">عرض كل النشاطات</a>
-                            </div>
-                        </div>
                                 </div>
+                                @if(!$loop->last)
+                                <hr>
+                                @endif
+                                @empty
+                                <div class="text-center py-4">
+                                    <p class="text-gray-500">لا توجد أنشطة حتى الآن</p>
+                                    <a href="{{ route('job-offers.index') }}" class="mt-2 inline-block text-indigo-600 hover:underline">استكشف فرص التطوع</a>
+                                </div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- الأحداث القادمة -->
                     <div class="bg-white overflow-hidden shadow-md rounded-xl">

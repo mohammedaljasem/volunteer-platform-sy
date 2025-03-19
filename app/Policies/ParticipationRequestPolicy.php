@@ -14,6 +14,11 @@ class ParticipationRequestPolicy
      */
     public function viewAny(User $user): bool
     {
+        // السماح للمشرفين بالوصول إلى جميع طلبات المشاركة
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+        
         // المستخدم يجب أن يكون مرتبطًا بمنظمة على الأقل
         return DB::table('organization_user')
             ->where('user_id', $user->id)
@@ -25,6 +30,11 @@ class ParticipationRequestPolicy
      */
     public function view(User $user, ParticipationRequest $participationRequest): bool
     {
+        // السماح للمشرفين بمشاهدة أي طلب مشاركة
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+        
         // المستخدم يمكنه مشاهدة طلباته الخاصة دائمًا
         if ($participationRequest->user_id === $user->id) {
             return true;
@@ -59,6 +69,11 @@ class ParticipationRequestPolicy
      */
     public function update(User $user, ParticipationRequest $participationRequest): bool
     {
+        // السماح للمشرفين بتحديث أي طلب مشاركة
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+        
         // فقط صاحب الحملة (منشئ فرصة التطوع) يمكنه تحديث طلبات المشاركة
         $jobOffer = $participationRequest->jobOffer;
         if ($jobOffer) {
@@ -79,6 +94,11 @@ class ParticipationRequestPolicy
      */
     public function delete(User $user, ParticipationRequest $participationRequest): bool
     {
+        // السماح للمشرفين بحذف أي طلب مشاركة
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+        
         // المستخدم يمكنه حذف طلباته الخاصة فقط إذا كانت معلقة
         if ($participationRequest->user_id === $user->id && $participationRequest->status === 'معلق') {
             return true;
@@ -104,6 +124,11 @@ class ParticipationRequestPolicy
      */
     public function restore(User $user, ParticipationRequest $participationRequest): bool
     {
+        // السماح للمشرفين باستعادة أي طلب مشاركة
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+        
         return false;
     }
 
@@ -112,6 +137,11 @@ class ParticipationRequestPolicy
      */
     public function forceDelete(User $user, ParticipationRequest $participationRequest): bool
     {
+        // السماح للمشرفين بالحذف النهائي لأي طلب مشاركة
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+        
         return false;
     }
 }

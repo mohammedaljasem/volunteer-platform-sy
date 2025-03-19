@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class JobOffer extends Model
 {
@@ -52,13 +53,24 @@ class JobOffer extends Model
             return 'https://via.placeholder.com/350x200/3949ab/FFFFFF?text=فرصة+تطوع';
         }
         
-        // التحقق مما إذا كان المسار يبدأ بـ "job-offers/" وهو مخزن في Storage
+        // التحقق مما إذا كان المسار يبدأ بمسار تخزين
         if (strpos($this->image, 'job-offers/') === 0 || strpos($this->image, 'job_offers/') === 0) {
             return asset('storage/' . $this->image);
         }
         
         // إذا كان المسار كاملاً
         return asset($this->image);
+    }
+
+    /**
+     * الحصول على وصف مختصر
+     * 
+     * @param int $length طول الوصف المختصر
+     * @return string
+     */
+    public function getShortDescriptionAttribute($length = 100): string
+    {
+        return Str::limit(strip_tags($this->description), $length);
     }
 
     /**

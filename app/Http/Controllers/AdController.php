@@ -7,19 +7,30 @@ use App\Models\Comment;
 use App\Models\Company;
 use App\Models\Donation;
 use App\Models\UserPoint;
+use App\Models\Wallet;
+use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\DonationThanksNotification;
+use Illuminate\Support\Str;
 
 class AdController extends Controller
 {
     /**
+     * خدمة معالجة الصور
+     * 
+     * @var \App\Services\ImageService
+     */
+    protected $imageService;
+
+    /**
      * Create a new controller instance.
      */
-    public function __construct()
+    public function __construct(ImageService $imageService)
     {
         $this->middleware('auth');
+        $this->imageService = $imageService;
     }
 
     /**
@@ -77,7 +88,7 @@ class AdController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'company_id' => 'required|exists:companies,id',
             'category' => 'nullable|string|max:100',
             'goal_amount' => 'required|numeric|min:0',
@@ -88,9 +99,18 @@ class AdController extends Controller
             'longitude' => 'nullable|numeric',
         ]);
         
+        // تنظيف البيانات
+        $validatedData['title'] = strip_tags($validatedData['title']);
+        $validatedData['description'] = strip_tags($validatedData['description']); // الاكتفاء بإزالة العلامات فقط
+        
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('ads', 'public');
-            $validatedData['image'] = $path;
+            $validatedData['image'] = $this->imageService->storeOptimized(
+                $request->file('image'),
+                'ads',
+                1200, // العرض المطلوب للصورة الرئيسية
+                null,
+                85
+            );
         }
         
         $validatedData['current_amount'] = 0;
@@ -134,7 +154,7 @@ class AdController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'company_id' => 'required|exists:companies,id',
             'category' => 'nullable|string|max:100',
             'goal_amount' => 'required|numeric|min:0',
@@ -147,14 +167,23 @@ class AdController extends Controller
             'longitude' => 'nullable|numeric',
         ]);
         
+        // تنظيف البيانات
+        $validatedData['title'] = strip_tags($validatedData['title']);
+        $validatedData['description'] = strip_tags($validatedData['description']); // الاكتفاء بإزالة العلامات فقط
+        
         if ($request->hasFile('image')) {
-            // Delete old image
+            // حذف الصورة القديمة
             if ($ad->image) {
-                Storage::disk('public')->delete($ad->image);
+                $this->imageService->deleteImage($ad->image);
             }
             
-            $path = $request->file('image')->store('ads', 'public');
-            $validatedData['image'] = $path;
+            $validatedData['image'] = $this->imageService->storeOptimized(
+                $request->file('image'),
+                'ads',
+                1200, // العرض المطلوب للصورة الرئيسية
+                null,
+                85
+            );
         }
         
         $ad->update($validatedData);
@@ -170,9 +199,9 @@ class AdController extends Controller
     {
         $this->authorize('delete', $ad);
         
-        // Delete the image
+        // حذف الصورة المرتبطة بالحملة
         if ($ad->image) {
-            Storage::disk('public')->delete($ad->image);
+            $this->imageService->deleteImage($ad->image);
         }
         
         $ad->delete();
@@ -204,13 +233,13 @@ class AdController extends Controller
             'is_recurring' => 'nullable|boolean',
         ]);
         
-        $user = auth()->user();
+        $user = Auth::user();
         $amount = $validatedData['amount'];
         
         // إذا كانت طريقة الدفع هي المحفظة، نتحقق من الرصيد
         if ($validatedData['payment_method'] === 'محفظة') {
             // البحث عن محفظة المستخدم أو إنشاء محفظة جديدة
-            $wallet = \App\Models\Wallet::firstOrCreate(
+            $wallet = Wallet::firstOrCreate(
                 ['user_id' => $user->id],
                 ['balance' => 0]
             );
@@ -249,10 +278,9 @@ class AdController extends Controller
         $ad->save();
         
         // منح نقاط للمستخدم (10 نقاط لكل 100 وحدة من المبلغ)
-        $user = auth()->user();
         $pointsToAward = max(10, floor($amount / 100) * 10);
         
-        // منح النقاط لجميع المستخدمين
+        // منح النقاط
         UserPoint::create([
             'user_id' => $user->id,
             'points' => $pointsToAward,
@@ -278,7 +306,7 @@ class AdController extends Controller
             'text' => 'required|string|max:500',
         ]);
         
-        $validatedData['user_id'] = auth()->id();
+        $validatedData['user_id'] = Auth::id();
         $validatedData['ad_id'] = $ad->id;
         $validatedData['date'] = now(); // تاريخ اليوم
         
@@ -295,7 +323,7 @@ class AdController extends Controller
     public function updateComment(Request $request, Comment $comment)
     {
         // التأكد من أن المستخدم هو صاحب التعليق
-        if ($comment->user_id !== auth()->id()) {
+        if ($comment->user_id !== Auth::id()) {
             abort(403, 'غير مصرح لك بتعديل هذا التعليق');
         }
         
@@ -317,7 +345,7 @@ class AdController extends Controller
     public function deleteComment(Comment $comment)
     {
         // التأكد من أن المستخدم هو صاحب التعليق
-        if ($comment->user_id !== auth()->id()) {
+        if ($comment->user_id !== Auth::id()) {
             abort(403, 'غير مصرح لك بحذف هذا التعليق');
         }
         

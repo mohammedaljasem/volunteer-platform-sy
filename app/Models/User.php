@@ -180,10 +180,9 @@ class User extends Authenticatable
     }
 
     /**
-     * علاقة المستخدم بالحملات التي شارك فيها
-     * User participated in Ads relationship
+     * المشاركة في حملات التبرعات
      */
-    public function participatedAds(): BelongsToMany
+    public function participatedAds()
     {
         return $this->belongsToMany(Ad::class, 'ad_participants')
             ->withTimestamps();

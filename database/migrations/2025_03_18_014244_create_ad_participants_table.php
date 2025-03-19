@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('ad_participants', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('ad_id')->constrained('ads')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
