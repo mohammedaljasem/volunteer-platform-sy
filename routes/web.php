@@ -33,6 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/debug', [ProfileController::class, 'debug'])->name('profile.debug');
+    Route::get('/profile/wallet', function () {
+        return redirect()->route('wallet.index');
+    })->name('profile.wallet');
     
     // مسارات النشاطات والأحداث
     Route::get('/activities', [App\Http\Controllers\ActivityController::class, 'index'])->name('activities.index');
