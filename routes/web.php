@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\SocialController;  
+
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -222,5 +224,10 @@ Route::middleware('auth')->get('/test-notification', function() {
     
     return redirect()->back()->with('success', 'Test notifications created!');
 });
+
+// Google
+Route::get('auth/google', [SocialController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [SocialController::class, 'handleGoogleCallback']);
+
 
 require __DIR__.'/auth.php';

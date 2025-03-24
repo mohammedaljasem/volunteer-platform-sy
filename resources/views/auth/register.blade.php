@@ -64,6 +64,10 @@
                             {{ __('لديك حساب بالفعل؟ تسجيل الدخول') }}
                         </a>
                     </div>
+                    <div class="flex justify-center mt-4 space-x-4">
+                        <a href="{{ url('auth/google') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                            تسجيل عبر Google
+                        </a>
                 </form>
             </div>
         </div>
