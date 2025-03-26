@@ -5,6 +5,8 @@
                 {{ __('منصة التطوع السورية') }}
             </h2>
             <img class="mx-auto h-16 w-auto" src="{{ asset('storage/auth/@logo-login.jpeg') }}" alt="منصة التطوع">
+            
+
         </div>
 
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -63,6 +65,10 @@
                             {{ __('ليس لديك حساب؟ سجل الآن') }}
                         </a>
                     </div>
+                    <div class="flex justify-center mt-4 space-x-4">
+                        <a href="{{ url('auth/google') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                            تسجيل عبر Google
+                        </a>
                 </form>
             </div>
         </div>
