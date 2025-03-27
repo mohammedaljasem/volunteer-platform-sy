@@ -229,5 +229,27 @@ Route::middleware('auth')->get('/test-notification', function() {
 Route::get('auth/google', [SocialController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [SocialController::class, 'handleGoogleCallback']);
 
+//chat
+use App\Http\Controllers\ChatController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+});
+
+Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
+
+Route::get('/chat/{conversation}', [ChatController::class, 'show'])->name('chat.show');
+
+Route::post('/chat/{conversation}/message', [ChatController::class, 'sendMessage'])->name('chat.message');
+
+Route::post('/chat/{conversation}/message', [ChatController::class, 'storeMessage'])->name('chat.message');
+
+
+Route::delete('/chat/message/{message}', [ChatController::class, 'destroyMessage'])->name('chat.message.destroy');
+
+Route::delete('/chat/message/{message}', [ChatController::class, 'destroy'])->name('chat.message.destroy');
+
+
+
 
 require __DIR__.'/auth.php';

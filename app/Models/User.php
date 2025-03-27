@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\LaravelNotification;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -214,4 +215,20 @@ class User extends Authenticatable
         // This is how Laravel normally routes database notifications
         return LaravelNotification::query();
     }
+
+
+    public function conversations()
+    {
+        return $this->belongsToMany(\App\Models\Conversation::class)
+                    ->withTimestamps()
+                    ->withPivot('joined_at');
+    }
+    
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+    
+
 }
