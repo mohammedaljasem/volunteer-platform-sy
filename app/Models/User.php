@@ -229,6 +229,31 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class);
     }
+
+
+    // عدد رسائل غير مقروءة
+
+    public function unreadMessagesCount()
+    {
+        return \App\Models\Message::whereHas('conversation.users', function ($query) {
+                $query->where('user_id', $this->id);
+            })
+            ->where('user_id', '!=', $this->id)
+            ->whereDoesntHave('reads', function ($q) {
+                $q->where('user_id', $this->id);
+            })
+            ->count();
+    }
+    
+
+    public function messageReads()
+        {
+            return $this->hasMany(MessageRead::class);
+        }
+
+        
+
+
     
 
 }

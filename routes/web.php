@@ -238,7 +238,6 @@ Route::middleware(['auth'])->group(function () {
 
 Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
 
-Route::get('/chat/{conversation}', [ChatController::class, 'show'])->name('chat.show');
 
 Route::post('/chat/{conversation}/message', [ChatController::class, 'sendMessage'])->name('chat.message');
 
@@ -248,8 +247,19 @@ Route::post('/chat/{conversation}/message', [ChatController::class, 'storeMessag
 Route::delete('/chat/message/{message}', [ChatController::class, 'destroyMessage'])->name('chat.message.destroy');
 
 Route::delete('/chat/message/{message}', [ChatController::class, 'destroy'])->name('chat.message.destroy');
+//تعديل اسم الدردشة
 
+Route::put('/chat/{conversation}/update-title', [ChatController::class, 'updateTitle'])
+    ->name('chat.update.title');
+//حذف الدردشة
+Route::delete('/chat/{conversation}', [ChatController::class, 'destroyConversation'])->name('chat.destroy');
 
+// أرشفة
+Route::get('/chat/archive', [ChatController::class, 'archived'])->name('chat.archived'); 
+Route::put('/chat/{conversation}/archive', [ChatController::class, 'archiveConversation'])->name('chat.archive');
+Route::put('/chat/{conversation}/unarchive', [ChatController::class, 'unarchiveConversation'])->name('chat.unarchive');
 
+// عرض المحادثة
+Route::get('/chat/{conversation}', [ChatController::class, 'show'])->name('chat.show'); 
 
 require __DIR__.'/auth.php';

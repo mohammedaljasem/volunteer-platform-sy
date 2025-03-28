@@ -17,12 +17,19 @@ class ChatController extends Controller
 {
     //
     public function index()
-    {
-        $user = Auth::user();
-        $conversations = $user->conversations()->with('users')->latest()->get();
+{
+    $user = Auth::user();
 
-        return view('chat.index', compact('conversations'));
-    }
+    $conversations = $user->conversations()
+        ->where('is_archived', false) // 🛠️ هاد الشرط المهم!
+        ->with('users')
+        ->latest()
+        ->get();
+
+    return view('chat.index', compact('conversations'));
+}
+
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -49,13 +56,25 @@ class ChatController extends Controller
 
 
 
-public function show(Conversation $conversation): View
-{
-    // بإمكانك تحميل الرسائل مثلاً لو بدك
-    $conversation->load('messages.user');
-
-    return view('chat.show', compact('conversation'));
-}
+    public function show(Conversation $conversation): View
+    {
+        $conversation->load('messages.user');
+    
+        // تسجيل قراءة الرسائل
+        foreach ($conversation->messages as $message) {
+            $alreadyRead = $message->reads()->where('user_id', auth()->id())->exists();
+    
+            if (!$alreadyRead) {
+                $message->reads()->create([
+                    'user_id' => auth()->id(),
+                    'read_at' => now(),
+                ]);
+            }
+        }
+    
+        return view('chat.show', compact('conversation'));
+    }
+    
 
 
 
@@ -96,7 +115,91 @@ public function destroy(Message $message): RedirectResponse
 
     return back()->with('success', 'تم حذف الرسالة بنجاح.');
 }
+public function edit(Conversation $conversation): View
+{
+    return view('chat.edit', compact('conversation'));
+}
 
+public function update(Request $request, Conversation $conversation): RedirectResponse
+{
+    $request->validate([
+        'title' => 'nullable|string|max:255',
+    ]);
+
+    $conversation->update([
+        'title' => $request->input('title'),
+    ]);
+
+    return redirect()->route('chat.index')->with('success', 'تم تعديل اسم المحادثة بنجاح!');
+}
+
+public function updateTitle(Request $request, Conversation $conversation): RedirectResponse
+{
+    // تحقق من صلاحية التعديل (اختياري)
+    if (! $conversation->users->contains(auth()->id())) {
+        abort(403, 'غير مصرح لك بتعديل هذه المحادثة.');
+    }
+
+    $request->validate([
+        'title' => 'required|string|max:255',
+    ]);
+
+    $conversation->update([
+        'title' => $request->input('title'),
+    ]);
+
+    return back()->with('success', 'تم تعديل اسم المحادثة بنجاح.');
+}
+public function destroyConversation(Conversation $conversation): RedirectResponse
+{
+    if (! $conversation->users->contains(auth()->id())) {
+        abort(403, 'غير مصرح لك بحذف هذه المحادثة.');
+    }
+
+    // حذف الرسائل والعلاقات ثم المحادثة
+    $conversation->messages()->delete();
+    $conversation->users()->detach();
+    $conversation->delete();
+
+    return back()->with('success', 'تم حذف المحادثة بنجاح.');
+}
+
+//الارشفة
+public function archiveConversation(Conversation $conversation): RedirectResponse
+{
+    if (! $conversation->users->contains(auth()->id())) {
+        abort(403, 'غير مصرح لك بأرشفة هذه المحادثة.');
+    }
+
+    $conversation->update(['is_archived' => true]);
+
+    return back()->with('success', 'تمت أرشفة المحادثة بنجاح.');
+}
+
+
+public function archived()
+{
+    $user = Auth::user();
+
+    $conversations = $user->conversations()
+        ->where('is_archived', true)
+        ->with('users')
+        ->latest()
+        ->get();
+
+    return view('chat.archive', compact('conversations'));
+}
+
+public function unarchiveConversation(Conversation $conversation): RedirectResponse
+{
+    if (! $conversation->users->contains(auth()->id())) {
+        abort(403, 'غير مصرح لك باستعادة هذه المحادثة.');
+    }
+
+    $conversation->update(['is_archived' => false]);
+
+    return back()->with('success', 'تمت استعادة المحادثة من الأرشيف.');
+}
 
 
 

@@ -17,7 +17,13 @@ public function user()
     return $this->belongsTo(User::class);
 }
 
-protected $fillable = ['conversation_id', 'user_id', 'content'];
+
+protected $fillable = ['conversation_id', 'user_id', 'content', 'is_read'];
+
+public function reads()
+{
+    return $this->hasMany(MessageRead::class);
+}
 
 
 

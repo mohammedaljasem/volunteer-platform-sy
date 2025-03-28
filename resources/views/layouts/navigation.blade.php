@@ -16,6 +16,7 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="dark:text-gray-300 dark:hover:text-white">
                         <i class="fas fa-home ml-1"></i> {{ __('الرئيسية') }}
                     </x-nav-link>
+
                     <x-nav-link :href="route('ads.index')" :active="request()->routeIs('ads.*')" class="dark:text-gray-300 dark:hover:text-white">
                         <i class="fas fa-bullhorn ml-1"></i> {{ __('الحملات') }}
                     </x-nav-link>
@@ -25,6 +26,23 @@
                     <x-nav-link :href="route('activities.index')" :active="request()->routeIs('activities.*')" class="dark:text-gray-300 dark:hover:text-white">
                         <i class="fas fa-chart-line ml-1"></i> {{ __('نشاطاتي') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.*')" class="relative dark:text-gray-300 dark:hover:text-white">
+                        <span class="mr-1 relative">
+                            💬
+                            @php
+                                $unread = auth()->user()->unreadMessagesCount();
+                            @endphp
+
+                            @if ($unread > 0)
+                                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1 leading-none">
+                                    {{ $unread }}
+                                </span>
+                            @endif
+                        </span>
+                        المحادثات
+                        
+                    </x-nav-link>
+                    
                 </div>
             </div>
 

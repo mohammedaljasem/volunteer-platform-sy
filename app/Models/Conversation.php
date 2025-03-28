@@ -16,7 +16,8 @@ public function messages()
 {
     return $this->hasMany(Message::class);
 }
-protected $fillable = ['title', 'is_group'];
+protected $fillable = ['title', 'is_group', 'is_archived'];
+
 
 public function show(Conversation $conversation)
 {

@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Models\Wallet;
 use Illuminate\Auth\Events\Login;
+use App\Models\Message;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,22 @@ class AppServiceProvider extends ServiceProvider
                     ['user_id' => $user->id],
                     ['balance' => 0]
                 );
+            }
+        });
+        View::composer('*', function ($view) {
+            if (auth()->check()) {
+                $userId = auth()->id();
+    
+                $unreadCount = Message::whereHas('conversation.users', function ($q) use ($userId) {
+                        $q->where('user_id', $userId);
+                    })
+                    ->where('user_id', '!=', $userId)
+                    ->whereDoesntHave('reads', function ($q) use ($userId) {
+                        $q->where('user_id', $userId);
+                    })
+                    ->count();
+    
+                $view->with('unreadMessageCount', $unreadCount);
             }
         });
     }

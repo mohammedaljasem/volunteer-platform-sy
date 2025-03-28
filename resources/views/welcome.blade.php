@@ -47,6 +47,7 @@
                     </div>
 
                     <div class="hidden sm:flex sm:items-center sm:mr-6">
+                        
                         <!-- زر تبديل الوضع الداكن/الفاتح -->
                         <button @click="darkMode = !darkMode" class="flex items-center justify-center h-10 w-10 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none transition duration-150 ease-in-out mr-4" title="تبديل الوضع المظلم">
                             <template x-if="!darkMode">
